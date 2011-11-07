@@ -2,7 +2,6 @@
 - getProfiles
 - getUserBalance
 - getUserSettings
-- getGroups
 - getGroupsFull
 - getVariable 
 - getVariables
@@ -107,3 +106,8 @@
   sms:
     - setSMSPrefix
     - getSMSPrefix
+  groups:
+    - get
+    - getById
+    - isMember
+    - getMembers
