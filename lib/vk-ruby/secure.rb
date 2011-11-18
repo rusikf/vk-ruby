@@ -6,8 +6,9 @@ module VK
     attr_reader :app_secret
 
     def initialize(p={})
-      raise 'undefined application id' unless @app_id = p[:app_id]  
-      raise 'undefined application secret' unless @secret = p[:app_secret]
+      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+      raise 'undefined application id' unless @app_id
+      raise 'undefined application secret' unless @secret
       transform secure_api, self.method(:vk_call)
     end
   end

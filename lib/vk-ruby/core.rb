@@ -11,14 +11,8 @@ module VK
       end
 
       result = to_json(request({:path => "/oauth/access_token", :params => prms }).body)
-
       raise VK::VkAuthorizeException.new(result) if result['error']
-
-      if auto_save
-        @expires_in = result["expires_in"]      if result['expires_in']
-           @user_id = result["user_id"]         if result['user_id']
-        @access_token = result["access_token"]  if result['access_token']
-      end
+      result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 
       result
     end
@@ -30,7 +24,6 @@ module VK
       params[:access_token] ||= @access_token
 
       result = to_json(request(:path => "/method/#{method_name}", :params => params).body)
-
       raise VK::VkException.new(method_name,result) if result['error']
 
       result['response']

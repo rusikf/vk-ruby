@@ -3,12 +3,14 @@ module VK
     include Core
     include Transformer
 
-     attr_accessor :settings
+    attr_accessor :settings
 
     def initialize(p={})
-      raise 'undefined application id' unless @app_id = p[:app_id]
+      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+      raise 'undefined application id' unless @app_id
 
-      @scope = p[:scope] ||= 'notify,friends'
+      @settings ||= 'notify,friends'
+
       transform base_api, self.method(:vk_call)
       transform ext_api, self.method(:vk_call)
     end

@@ -6,11 +6,12 @@ module VK
     attr_accessor :app_secret, :settings
 
     def initialize(p={})
-      raise 'undefined application id' unless @app_id = p[:app_id] 
-      raise 'undefined application secret' unless @app_secret = p[:app_secret] 
+      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+      raise 'undefined application id' unless @app_id
+      raise 'undefined application secret' unless @app_secret
       
-      @logger = p[:logger] if p[:logger]
-      @settings = p[:settings] ||= 'notify,friends,offline' 
+      @settings ||= 'notify,friends,offline' 
+
       transform base_api, self.method(:vk_call)
     end
   end
