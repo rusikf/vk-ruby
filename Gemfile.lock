@@ -9,7 +9,7 @@ GEM
     rake (0.9.2.2)
     rcov (0.9.11)
     shoulda (2.11.3)
-    transformer (0.2.0)
+    transformer (0.2.1)
 
 PLATFORMS
   ruby
