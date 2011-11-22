@@ -5,7 +5,7 @@ gem 'transformer'
 group :development do
   gem "bundler"
   gem "jeweler"
-  gem "rcov"
+  # gem "rcov"
   gem 'minitest'
   gem 'webmock'
   gem 'json'
