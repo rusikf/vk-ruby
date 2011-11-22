@@ -8,4 +8,5 @@ group :development do
   gem "rcov"
   gem 'minitest'
   gem 'webmock'
+  gem 'json'
 end
