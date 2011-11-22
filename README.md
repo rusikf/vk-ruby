@@ -1,8 +1,6 @@
 #vk-ruby
 Ruby wrapper for vk.com API [...read more ](http://suckless.ru/post/10080778911/vk-ruby "САКЛЕСС!!")
 
-Версия 0.7.0 ломанная. В кором времени всё исправлю.
-
 ## Installation
 `gem install vk-ruby`
 
@@ -31,10 +29,6 @@ end
 - ##### Serverside & secure server
 
     [social_app](https://github.com/zinenko/social_app)
-
-## Tests
-
-Coming soon!
 
 ## Contributing to vk-ruby
  
