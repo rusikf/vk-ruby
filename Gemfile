@@ -9,4 +9,6 @@ group :development do
   gem 'minitest'
   gem 'webmock'
   gem 'json'
+  gem 'json-jruby', :platforms => :jruby
+  gem 'jruby-openssl', :platforms => :jruby
 end
