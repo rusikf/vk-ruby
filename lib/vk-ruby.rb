@@ -8,5 +8,16 @@ require 'yaml'
   require "vk-ruby/#{lib}"
 end
 
-module VK
+module VK; end
+
+# JSON Parser for VK-RUBY.
+#
+# If it's possible, please include Yajl to your environment.
+
+VK::JSON = begin
+  require 'yajl'
+  ::Yajl
+rescue LoadError
+  require 'json'
+  ::JSON
 end

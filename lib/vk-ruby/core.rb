@@ -2,36 +2,17 @@ module VK
   module Core
     attr_accessor :app_id, :access_token, :user_id, :expires_in, :debug, :logger
 
-    def authorize(code = nil, auto_save = true)
-      prms = {:client_id => @app_id, :client_secret => @app_secret}
-      unless code # secure server
-        prms[:grant_type] = 'client_credentials'
-      else        # serverside app
-        prms[:code] = code
-      end
-
-      result = to_json(request({:path => "/oauth/access_token", :params => prms }).body)
-      raise VK::VkAuthorizeException.new(result) if result['error']
-      result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
-
-      result
-    end
-
-    private 
-
     def vk_call(method_name,p)  
       params = p[0] ||= {}
-      params[:access_token] ||= @access_token
+      raise 'undefined access token' unless params[:access_token] ||= @access_token
 
-      result = to_json(request(:path => "/method/#{method_name}", :params => params).body)
+      result = JSON.parse(request(:path => "/method/#{method_name}", :params => params).body)
       raise VK::VkException.new(method_name,result) if result['error']
 
       result['response']
     end
 
-    def to_json(str)
-      JSON.parse str
-    end
+    private
 
     def request(p={})
       http.get( p[:path] + "?" + (p[:params].map{|k,v| "#{k}=#{v}" }).join('&') )

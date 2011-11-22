@@ -9,7 +9,16 @@ rescue Bundler::BundlerError => e
   $stderr.puts "Run `bundle install` to install missing gems"
   exit e.status_code
 end
+
 require 'rake'
+require 'rake/testtask'
+
+task :default => :test
+
+Rake::TestTask.new do |test|
+  test.pattern = 'tests/*_test.rb'
+  test.verbose = true
+end
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|

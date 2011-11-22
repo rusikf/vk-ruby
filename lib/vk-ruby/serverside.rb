@@ -14,5 +14,18 @@ module VK
 
       transform base_api, self.method(:vk_call)
     end
+
+    def authorize(code = nil, auto_save = true)
+      raise VK::VkAuthorizeException.new('undefined code') unless code
+      params = {:client_id => @app_id, :client_secret => @app_secret, :code => code}
+
+      result = JSON.parse(request({:path => "/oauth/access_token", :params => params }).body)
+      raise VK::VkAuthorizeException.new(result) if result['error']
+
+      result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+
+      result
+    end
+
   end
 end
