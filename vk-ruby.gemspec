@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "vk-ruby"
-  s.version = "0.7.1"
+  s.version = "0.7.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrew Zinenko"]
-  s.date = "2011-11-20"
+  s.date = "2011-11-23"
   s.description = " Ruby wrapper for vk.com API "
   s.email = "zinenkoan@gmail.com"
   s.extra_rdoc_files = [
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     ".rvmrc",
+    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -34,6 +35,10 @@ Gem::Specification.new do |s|
     "lib/vk-ruby/serverside.rb",
     "lib/vk-ruby/standalone.rb",
     "lib/vk-ruby/vk_exception.rb",
+    "tests/helpers.rb",
+    "tests/secure_test.rb",
+    "tests/serverside_test.rb",
+    "tests/standalone_test.rb",
     "vk-ruby.gemspec"
   ]
   s.homepage = "http://github.com/zinenko/vk-ruby"
@@ -47,25 +52,34 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<transformer>, [">= 0"])
-      s.add_development_dependency(%q<shoulda>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_development_dependency(%q<jeweler>, ["~> 1.6.0"])
-      s.add_development_dependency(%q<rcov>, [">= 0"])
+      s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<minitest>, [">= 0"])
+      s.add_development_dependency(%q<webmock>, [">= 0"])
+      s.add_development_dependency(%q<json>, [">= 0"])
+      s.add_development_dependency(%q<json-jruby>, [">= 0"])
+      s.add_development_dependency(%q<jruby-openssl>, [">= 0"])
       s.add_runtime_dependency(%q<transformer>, [">= 0"])
     else
       s.add_dependency(%q<transformer>, [">= 0"])
-      s.add_dependency(%q<shoulda>, [">= 0"])
-      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-      s.add_dependency(%q<jeweler>, ["~> 1.6.0"])
-      s.add_dependency(%q<rcov>, [">= 0"])
+      s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<minitest>, [">= 0"])
+      s.add_dependency(%q<webmock>, [">= 0"])
+      s.add_dependency(%q<json>, [">= 0"])
+      s.add_dependency(%q<json-jruby>, [">= 0"])
+      s.add_dependency(%q<jruby-openssl>, [">= 0"])
       s.add_dependency(%q<transformer>, [">= 0"])
     end
   else
     s.add_dependency(%q<transformer>, [">= 0"])
-    s.add_dependency(%q<shoulda>, [">= 0"])
-    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
-    s.add_dependency(%q<jeweler>, ["~> 1.6.0"])
-    s.add_dependency(%q<rcov>, [">= 0"])
+    s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<minitest>, [">= 0"])
+    s.add_dependency(%q<webmock>, [">= 0"])
+    s.add_dependency(%q<json>, [">= 0"])
+    s.add_dependency(%q<json-jruby>, [">= 0"])
+    s.add_dependency(%q<jruby-openssl>, [">= 0"])
     s.add_dependency(%q<transformer>, [">= 0"])
   end
 end
