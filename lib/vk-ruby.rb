@@ -9,12 +9,10 @@ module VK; end
 #
 # If it's possible, please include Yajl to your environment.
 
-VK::JSON = begin
-    require 'yajl/json_gem'
-    ::Yajl
+begin
+  require 'yajl/json_gem'
   rescue LoadError
-    require 'json'
-    ::JSON
+  require 'json'
 end
 
 %w(core secure serverside standalone vk_exception).each do |lib|
