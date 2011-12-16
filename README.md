@@ -14,8 +14,8 @@ require 'vk-ruby'
 
 app =  VK::Serverside.new(:app_id => APP_ID, :app_secret => APP_SECRET)
 
-if params = app.authorize(CODE) 
-   app.search(:q => 'Sting', :access_token => params['access_token']).each do |track|
+if app.authorize(CODE) 
+   app.search(:q => 'Sting').each do |track|
      puts track.inspect  # => Sting tracks
    end
 end

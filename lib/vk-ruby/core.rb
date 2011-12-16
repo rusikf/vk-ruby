@@ -6,13 +6,24 @@ module VK
       params = p[0] ||= {}
       raise 'undefined access token' unless params[:access_token] ||= @access_token
 
-      result = JSON.parse(request(:path => "/method/#{method_name}", :params => params).body)
+      begin
+        resp = request(:path => "/method/#{method_name}", :params => params)  
+        result = JSON.parse(resp.body)
+      rescue Exception => info
+        puts resp.inspect
+        puts info.inspect
+        raise
+      end
       raise VK::VkException.new(method_name,result) if result['error']
 
       result['response']
     end
 
     private
+
+    # def json(string)
+    #   return JSON.parse(string) rescue raise string.inspect
+    # end
 
     def request(p={})
       http.get( p[:path] + "?" + (p[:params].map{|k,v| "#{k}=#{v}" }).join('&') )
