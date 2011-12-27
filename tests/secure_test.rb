@@ -10,7 +10,6 @@ class SecureServerTest < MiniTest::Unit::TestCase
 		assert_equal @app.app_id, :test_id
 		assert_equal @app.app_secret, :test_secret
 		assert_nil @app.expires_in
-		assert_nil @app.debug
 		assert_nil @app.logger
 	end
 
@@ -21,9 +20,9 @@ class SecureServerTest < MiniTest::Unit::TestCase
 	end
 
 	def test_authorization 
-		stub_request(:get, /https:\/\/api.vk.com\/oauth\/access_token/).to_return(lambda { |request| {:body => URI.parse(request.uri).query.to_params.to_json} })
+		stub_request(:post, /https:\/\/api.vk.com\/oauth\/access_token/).to_return(lambda { |request| {:body => request.body.to_json}})
 		params = {:client_id => :test_id, :client_secret => :test_secret, :grant_type => :client_credentials }
-		assert_equal @app.authorize , params.stringify
+		assert_equal @app.authorize , params
 		WebMock.reset!
 	end
 

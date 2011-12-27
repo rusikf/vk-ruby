@@ -11,7 +11,6 @@ class StandaloneTest < MiniTest::Unit::TestCase
 		assert_equal @app.app_id, :test_id
 		assert_equal @app.access_token, :test_token
 		assert_nil @app.expires_in
-		assert_nil @app.debug
 		assert_nil @app.logger
 	end
 
@@ -51,8 +50,8 @@ class StandaloneTest < MiniTest::Unit::TestCase
 		end
 	end
 
-	def test_base_request_params
-		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => URI.parse(request.uri).query.to_params}.to_json } })
+	def test_base_post_request_params
+		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body}.to_json } })
 
 		perebor @app, @base_api do |obj, method_name, is_group|
 			unless is_group			
@@ -64,11 +63,39 @@ class StandaloneTest < MiniTest::Unit::TestCase
 		WebMock.reset!
 	end
 
-	def test_ext_request_params
-		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => URI.parse(request.uri).query.to_params}.to_json } })
+	def test_ext_post_request_params
+		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body}.to_json } })
 
 		perebor @app, @ext_api do |obj, method_name, is_group|
 			unless is_group			
+				params = random_params.merge!(:access_token => :test_token)
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+			end
+		end
+
+		WebMock.reset!
+	end
+
+	def test_base_get_request_params
+		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => (raise request.inspect)}.to_json } })
+
+		perebor @app, @base_api do |obj, method_name, is_group|
+			unless is_group
+				params = random_params.merge!(:access_token => :test_token, :verbs => :get)
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+			end
+		end
+
+		WebMock.reset!
+	end
+
+	def test_ext_get_request_params
+		@app.verbs = :get
+
+		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => URI.parse(request.uri).query.to_params}.to_json } })
+
+		perebor @app, @ext_api do |obj, method_name, is_group|
+			unless is_group
 				params = random_params.merge!(:access_token => :test_token)
 				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
 			end

@@ -1,11 +1,17 @@
-require 'rubygems'
 require 'net/https'
 require 'transformer'
 require 'yaml'
-require 'yajl/json_gem'
+require 'yajl'
 
-module VK; end
-
-%w(core secure serverside standalone vk_exception).each do |lib|
-  require "vk-ruby/#{lib}"
+module VK
 end
+
+VK::JSON = begin
+  require 'yajl'
+  ::Yajl
+rescue LoadError
+  require 'json'
+  ::JSON
+end
+
+%w(core_ext connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}

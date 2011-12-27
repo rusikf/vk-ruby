@@ -19,7 +19,7 @@ module VK
       raise VK::VkAuthorizeException.new('undefined code') unless code
       params = {:client_id => @app_id, :client_secret => @app_secret, :code => code}
 
-      result = JSON.parse(request({:path => "/oauth/access_token", :params => params }).body)
+      result = request({:path => "/oauth/access_token", :params => params })
       raise VK::VkAuthorizeException.new(result) if result['error']
 
       result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
