@@ -26,10 +26,6 @@ end
 
     [vk-console](http://github.com/zinenko/vk-console )
 
-- ##### Serverside & secure server
-
-    [social_app](https://github.com/zinenko/social_app)
-
 ## Contributing to vk-ruby
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
