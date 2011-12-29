@@ -1,23 +1,4 @@
 module VK::Executable
-
-  class Variables
-
-    def initialize
-      @vars = {}
-    end
-
-    private 
-
-    def method_missing(method_name, *argv)
-      if method =~ /\w=/
-        @vars[method_name] = argv.shift
-      else
-        super argv
-      end
-    end
-
-  end
-
   class Api
     def initialize
       transform base_api, self.method(:vk_call)
