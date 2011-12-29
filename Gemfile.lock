@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vk-ruby (0.8.0)
+    vk-ruby (0.7.4)
       json (~> 1.6)
       transformer (~> 0.2.2)
 

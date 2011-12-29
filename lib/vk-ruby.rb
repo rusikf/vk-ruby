@@ -14,4 +14,4 @@ rescue LoadError
   ::JSON
 end
 
-%w(core_ext connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}
+%w(connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}

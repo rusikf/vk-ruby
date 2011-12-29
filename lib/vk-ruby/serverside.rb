@@ -1,31 +1,28 @@
-module VK  
-  class Serverside 
-    include Core
-    include Transformer
+class VK::Serverside 
+  include VK::Core
+  include ::Transformer
 
-    attr_accessor :app_secret, :settings
+  attr_accessor :app_secret
 
-    def initialize(p={})
-      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
-      raise 'undefined application id' unless @app_id
-      raise 'undefined application secret' unless @app_secret
-      
-      @settings ||= 'notify,friends,offline' 
+  def initialize(p={})
+    p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+    raise 'undefined application id' unless @app_id
+    raise 'undefined application secret' unless @app_secret
+    
+    @settings ||= 'notify,friends,offline' 
 
-      transform base_api, self.method(:vk_call)
-    end
+    transform base_api, self.method(:vk_call)
+  end
 
-    def authorize(code = nil, auto_save = true)
-      raise VK::VkAuthorizeException.new('undefined code') unless code
-      params = {:client_id => @app_id, :client_secret => @app_secret, :code => code}
+  def authorize(code, auto_save = true)
+    response = request( :path => "/oauth/access_token", 
+                        :params => {:client_id => @app_id, :client_secret => @app_secret, :code => code}, 
+                        :verbs => :get )
 
-      result = request({:path => "/oauth/access_token", :params => params })
-      raise VK::VkAuthorizeException.new(result) if result['error']
+    raise VK::VkAuthorizeException.new(response) if response['error']
 
-      result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+    response.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 
-      result
-    end
-
+    response
   end
 end

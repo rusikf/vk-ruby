@@ -51,12 +51,12 @@ class StandaloneTest < MiniTest::Unit::TestCase
 	end
 
 	def test_base_post_request_params
-		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body}.to_json } })
+		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body.to_params}.to_json } })
 
 		perebor @app, @base_api do |obj, method_name, is_group|
 			unless is_group			
 				params = random_params.merge!(:access_token => :test_token)
-				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify
 			end
 		end
 
@@ -64,12 +64,12 @@ class StandaloneTest < MiniTest::Unit::TestCase
 	end
 
 	def test_ext_post_request_params
-		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body}.to_json } })
+		stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => request.body.to_params}.to_json } })
 
 		perebor @app, @ext_api do |obj, method_name, is_group|
 			unless is_group			
 				params = random_params.merge!(:access_token => :test_token)
-				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify
 			end
 		end
 
@@ -77,12 +77,12 @@ class StandaloneTest < MiniTest::Unit::TestCase
 	end
 
 	def test_base_get_request_params
-		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => (raise request.inspect)}.to_json } })
+		stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| {:body => {'response' => URI.parse(request.uri).query.to_params}.to_json } })
 
 		perebor @app, @base_api do |obj, method_name, is_group|
 			unless is_group
 				params = random_params.merge!(:access_token => :test_token, :verbs => :get)
-				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify
 			end
 		end
 
@@ -97,7 +97,7 @@ class StandaloneTest < MiniTest::Unit::TestCase
 		perebor @app, @ext_api do |obj, method_name, is_group|
 			unless is_group
 				params = random_params.merge!(:access_token => :test_token)
-				assert_equal obj.method(method_name.to_sym).call(params), params.stringify unless is_group
+				assert_equal obj.method(method_name.to_sym).call(params), params.stringify
 			end
 		end
 

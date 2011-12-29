@@ -1,25 +1,25 @@
-module VK  
-  class Secure
-    include Core
-    include Transformer
+class VK::Secure
+  include VK::Core
+  include ::Transformer
 
-    attr_reader :app_secret
+  attr_accessor :app_secret 
 
-    def initialize(p={})
-      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
-      raise 'undefined application id' unless @app_id
-      raise 'undefined application secret' unless @app_secret
-      transform secure_api, self.method(:vk_call)
-    end
+  def initialize(p={})
+    p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+    raise 'undefined application id' unless @app_id
+    raise 'undefined application secret' unless @app_secret
+    transform secure_api, self.method(:vk_call)
+  end
 
-    def authorize(auto_save = true)
-      prms = {:client_id => @app_id, :client_secret => @app_secret, :grant_type => :client_credentials}
-      
-      result = JSON.parse(request({:path => "/oauth/access_token", :params => prms }).body)
-      raise VK::VkAuthorizeException.new(result) if result['error']
-      result.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+  def authorize(auto_save = true)
+    response = request(:path => "/oauth/access_token", 
+                       :params => {:client_id => @app_id, :client_secret => @app_secret, :grant_type => :client_credentials}, 
+                       :verbs => :get )
 
-      result
-    end
+    raise VK::VkAuthorizeException.new(response) if response['error']
+
+    response.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+
+    response
   end
 end

@@ -1,19 +1,16 @@
-module VK
-  class Standalone 
-    include Core
-    include Transformer
+class VK::Standalone 
+  include VK::Core
+  include ::Transformer
 
-    attr_accessor :settings
+  attr_accessor :settings
 
-    def initialize(p={})
-      p.each{|k,v| instance_variable_set(:"@#{k}", v) }
-      raise 'undefined application id' unless @app_id
+  def initialize(p={})
+    p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+    raise 'undefined application id' unless @app_id
 
-      @settings ||= 'notify,friends'
+    @settings ||= 'notify,friends'
 
-      transform base_api, self.method(:vk_call)
-      transform ext_api, self.method(:vk_call)
-    end
-
+    transform base_api, self.method(:vk_call)
+    transform ext_api, self.method(:vk_call)
   end
 end
