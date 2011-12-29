@@ -11,15 +11,13 @@ Gem::Specification.new do |gem|
   gem.summary = "Ruby wrapper for vk.com API"
   gem.description = " Ruby wrapper for vk.com API "
   gem.homepage = "http://github.com/zinenko/vk-ruby"
-  gem.date = "2011-11-23"
+  gem.date = Time.now.strftime '%Y-%m-%d'
   gem.licenses = ["MIT"]
     
   gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
       
   gem.add_runtime_dependency 'transformer',   '~> 0.2.2'
-  gem.add_runtime_dependency 'json',          '~> 1.6'   unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /jruby/
-  gem.add_runtime_dependency 'jruby-openssl', '~> 0.7.4'     if Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /jruby/
-  gem.add_runtime_dependency 'json-jruby',    '~> 1.1.7'     if Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /jruby/
+  gem.add_runtime_dependency 'json',          '~> 1.6'
 
   gem.add_development_dependency 'rake', '~> 0.9'
   gem.add_development_dependency 'minitest', '~> 2.8'
