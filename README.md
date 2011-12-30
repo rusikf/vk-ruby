@@ -12,7 +12,7 @@ Ruby wrapper for vk.com API [...read more ](http://suckless.ru/post/10080778911/
 # Serverside Application
 require 'vk-ruby'
 
-app =  VK::Serverside.new(:app_id => APP_ID, :app_secret => APP_SECRET)
+app = VK::Serverside.new(:app_id => APP_ID, :app_secret => APP_SECRET)
 
 if app.authorize(CODE) 
    app.search(:q => 'Sting').each do |track|

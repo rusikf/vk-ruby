@@ -1,11 +1,9 @@
 require 'net/https'
 require 'transformer'
 require 'yaml'
-require 'yajl'
+require 'active_support'
 
-module VK
-end
-
+module VK; end
 
 begin
   require 'yajl'

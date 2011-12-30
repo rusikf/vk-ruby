@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/blackwinter/unicode.git
+  revision: 60e511442b4a79309d8a6aafcebcae3df7d01436
+  specs:
+    unicode (0.4.0)
+
 PATH
   remote: .
   specs:
@@ -25,6 +31,7 @@ PLATFORMS
 DEPENDENCIES
   minitest (~> 2.8)
   rake (~> 0.9)
+  unicode!
   vk-ruby!
   webmock (~> 1.0)
   yajl-ruby (~> 1.0)

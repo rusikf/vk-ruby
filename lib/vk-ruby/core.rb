@@ -1,3 +1,6 @@
+# encoding: UTF-8
+
+UTF8REGEX = /[^a-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui
 require 'iconv'
 
 module VK::Core
@@ -50,9 +53,9 @@ module VK::Core
 
     begin
       result = JSON.parse(response)
-    rescue Yajl::ParseError => e
-      @logger.error "Invalid encoding #=> #{response}" if @logger
-      response = valid_utf8(response)        
+    rescue JSON::ParserError, Yajl::ParseError => e
+      @logger.error "Invalid encoding" if @logger
+      response = valid_utf8(response)     
       result = JSON.parse(response)
     end
 
@@ -60,7 +63,10 @@ module VK::Core
   end
 
   def valid_utf8(string)
-    ::Iconv.iconv("UTF-8//IGNORE", "ISO-8859-1", (string + "\x20") ).first[0..-2]
+    save_to_file('bad_string.json', string)
+    string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
+    string.gsub!(UTF8REGEX,'')
+    string
   end
 
   [:base, :ext, :secure].each do |name|

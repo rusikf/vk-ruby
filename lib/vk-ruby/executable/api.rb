@@ -7,6 +7,8 @@ module VK::Executable
       transform secure_api,  self.method(:vk_call)
     end
 
+    private
+
     def vk_call(method_name, args)
       action = ['API', method_name].join
       params = ['(', params.to_vkscript, ')'].join if params = args.shift
