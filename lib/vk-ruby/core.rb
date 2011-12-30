@@ -49,11 +49,11 @@ module VK::Core
     response = VK::Connection.new(params).request(http_verbs, path, body, &block)
 
     begin
-      result = VK::JSON.load(response)
+      result = JSON.parse(response)
     rescue Yajl::ParseError => e
       @logger.error "Invalid encoding #=> #{response}" if @logger
       response = valid_utf8(response)        
-      result = VK::JSON.load(response)
+      result = JSON.parse(response)
     end
 
     result

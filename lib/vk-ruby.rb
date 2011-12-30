@@ -6,12 +6,12 @@ require 'yajl'
 module VK
 end
 
-VK::JSON = begin
+
+begin
   require 'yajl'
-  ::Yajl
+  require 'yajl/json_gem'
 rescue LoadError
   require 'json'
-  ::JSON
 end
 
-%w(connection executable/variabels core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}
+%w(connection executable/variabels executable/api core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}

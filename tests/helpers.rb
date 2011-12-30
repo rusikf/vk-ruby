@@ -1,7 +1,6 @@
 require "vk-ruby"
 require 'minitest/autorun'
 require 'webmock/minitest'
-require 'yajl/json_gem'
 
 class String 
 	def to_params
