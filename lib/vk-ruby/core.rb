@@ -35,7 +35,7 @@ module VK::Core
                         :path => [nil, 'method', method_name].join('/'),
                         :params => params)
 
-    raise VK::VkException.new(method_name, response) if response['error']
+    raise VK::Exception.new(method_name, response) if response['error']
     response['response']
   end
 
@@ -62,8 +62,14 @@ module VK::Core
     result
   end
 
+  def save_to_file(file_name, string)
+    aFile = File.new("bad_string.txt", "wb")
+    aFile.write(string)
+    aFile.close
+  end
+
   def valid_utf8(string)
-    save_to_file('bad_string.json', string)
+    #save_to_file('bad_string.json', string)
     string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
     string.gsub!(UTF8REGEX,'')
     string

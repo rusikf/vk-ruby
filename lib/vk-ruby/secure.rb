@@ -16,7 +16,7 @@ class VK::Secure
                        :params => {:client_id => @app_id, :client_secret => @app_secret, :grant_type => :client_credentials}, 
                        :verbs => :get )
 
-    raise VK::VkAuthorizeException.new(response) if response['error']
+    raise VK::AuthorizeException.new(response) if response['error']
 
     response.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 

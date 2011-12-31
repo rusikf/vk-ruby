@@ -1,7 +1,6 @@
 require 'net/https'
 require 'transformer'
 require 'yaml'
-require 'active_support'
 
 module VK; end
 

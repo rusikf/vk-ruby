@@ -1,6 +1,6 @@
 module VK
 
-  class VkException < Exception
+  class Exception < Exception
     attr_reader :vk_method, :error_code, :error_msg
 
     def initialize(vkmethod, error_hash)
@@ -11,7 +11,7 @@ module VK
     end
   end
 
-  class VkAuthorizeException < Exception
+  class AuthorizeException < Exception
     attr_reader :error, :error_msg
 
     def initialize(error_hash)
