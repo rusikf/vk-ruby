@@ -1,16 +1,22 @@
 module VK::Executable
-  class Variables
+  class Chain
 
     def initialize
-      @vars = {}
+      @vars = []
+      @chain = []
+      @api = VK::Executable::Api.new
     end
 
-    def to_hash
-      @vars
+    def var
+      VK::Executable::Variable.new(@vars)
     end
 
-    def to_json
-      @vars.to_json
+    def api
+      @api
+    end
+
+    def to_vkscript
+      @chain.join
     end
 
     private 
@@ -21,7 +27,6 @@ module VK::Executable
       elsif @vars[method_name]
         @vars[method_name]
       else
-        puts @vars.keys.include?(method_name) ? "ok" : 'error'
         super(method_name, argv)
       end
     end    

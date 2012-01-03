@@ -1,28 +1,27 @@
 # encoding: UTF-8
 
-UTF8REGEX = /[^a-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui
 require 'iconv'
 
 module VK::Core
+  UTF8REGEX = /[^a-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui
+
   attr_accessor :app_id, :access_token, :expires_in, :logger, :verbs, :attempts
 
-  def execute(*args, &block)
-    params = p.shift || {}
-    raise 'undefined access token' unless params[:access_token] ||= @access_token
-
+  def execute(params, &block)
     if block_given?
-      api = VK::Executable.new args
-      vk_script = block.binding(api).call.vk_script
-      vk_call 'execute', vk_script
+      api = VK::Executable::Chain.new
+      result = block.bind(api).call.to_vkscript
+      vk_script = api.to_vkscript + result
+      vk_call 'execute', [{:code => vk_script}.merge(params)]
     else
-      vk_call 'execute', args
+      vk_call 'execute', [params]
     end
   end
 
-  # execute :acces_token => 'token' do |api, result|
-  #   var.profiles = api.getProfiles(:uids => 1..100)
-  #   var.profiles += api.getProfiles(:uids => 100...200)
-  #   {:result => var.profiles}
+  # execute :acces_token => 'token' do
+  #   var.profiles = api.getProfiles(:uids => 1..100)       # chain.push 'var profiles = API.getProfiles({'uids': [1,2,3,4,5..100]})'
+  #   profiles += api.getProfiles(:uids => 100...200)       # chain.push 'profiles = profiles + API.getProfiles({'uids': [100..200]})'
+  #   profiles                                              # + return profiles
   # end
 
   private
@@ -33,7 +32,7 @@ module VK::Core
 
     response = request( :verbs => params.delete(:verbs),
                         :path => [nil, 'method', method_name].join('/'),
-                        :params => params)
+                        :params => params )
 
     raise VK::Exception.new(method_name, response) if response['error']
     response['response']
@@ -50,7 +49,6 @@ module VK::Core
               :attempts => @attempts}.merge(options)
 
     response = VK::Connection.new(params).request(http_verbs, path, body, &block)
-
     begin
       result = JSON.parse(response)
     rescue JSON::ParserError, Yajl::ParseError => e
@@ -62,14 +60,7 @@ module VK::Core
     result
   end
 
-  def save_to_file(file_name, string)
-    aFile = File.new("bad_string.txt", "wb")
-    aFile.write(string)
-    aFile.close
-  end
-
   def valid_utf8(string)
-    #save_to_file('bad_string.json', string)
     string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
     string.gsub!(UTF8REGEX,'')
     string
