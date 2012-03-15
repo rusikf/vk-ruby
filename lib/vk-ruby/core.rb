@@ -3,8 +3,6 @@
 require 'iconv'
 
 module VK::Core
-  UTF8REGEX = /[^a-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui
-
   attr_accessor :app_id, :access_token, :expires_in, :logger, :verbs, :attempts
 
   private
@@ -44,7 +42,7 @@ module VK::Core
   end
 
   def http_params hash
-    hash.map{|k,v| "#{CGI.escape k.to_s }=#{CGI.escape v.to_s }"}.join('&')
+    hash.map{|k,v| "#{CGI.escape k.to_s }=#{CGI.escape v.to_s }" }.join('&')
   end
 
   def connection_params options
@@ -55,17 +53,22 @@ module VK::Core
   end
 
   def parse string
-    JSON.parse(string)
-  rescue JSON::ParserError => e
-    @logger.error "Invalid encoding" if @logger
-    string = valid_utf8(string)     
-    JSON.parse(response)
-  end
+    attempt = 1
 
-  def valid_utf8 string 
-    string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
-    string.gsub!(UTF8REGEX,'')
-    string
+    begin
+      ::JSON.parse(string)
+    rescue ::JSON::ParserError => exxxc
+      @logger.error "Invalid encoding" if @logger
+
+      if attempt == 1
+        string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
+        string.gsub! /[^A-za-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui, ''
+      else 
+        raise ::VK::ResponseParse.new(exxxc)
+      end
+
+      attempt += 1; retry
+    end
   end
 
   [:base, :ext, :secure].each do |name|

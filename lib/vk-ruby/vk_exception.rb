@@ -1,12 +1,11 @@
 # encoding: UTF-8
 
 module VK
-
   class Exception < Exception
     attr_reader :vk_method, :error_code, :error_msg
 
-    def initialize(vkmethod, error_hash)
-      @vk_method = vkmethod
+    def initialize api_method, error_hash
+      @vk_method = api_method
       @error_code = error_hash['error']['error_code'].to_i
       @error_msg = "Error #{@error_code} in `#{@vk_method}' - #{error_hash['error']['error_msg']}"
       super @error_msg
@@ -16,11 +15,17 @@ module VK
   class AuthorizeException < Exception
     attr_reader :error, :error_msg
 
-    def initialize(error_hash)
+    def initialize error_hash
       @error = error_hash['error']
       @error_msg = "Error #{@error} - #{error_hash['error_description']}"
       super @error_msg
     end
   end
 
+  class ResponseParse < Exception
+    def initialize exception
+      @error = exception.error
+      @error_msg = exception.error_msg
+    end
+  end
 end
