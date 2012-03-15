@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 class VK::Secure
   include VK::Core
   include ::Transformer

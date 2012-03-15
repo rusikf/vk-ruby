@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 class VK::Connection
 	attr_reader :http
 

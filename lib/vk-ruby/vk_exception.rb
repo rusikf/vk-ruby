@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module VK
 
   class Exception < Exception

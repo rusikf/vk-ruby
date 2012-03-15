@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'net/https'
 require 'cgi'
 require 'transformer'
@@ -12,4 +14,4 @@ rescue LoadError
   require 'json'
 end
 
-%w(ext connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}
+%w(connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}
