@@ -5,12 +5,7 @@ require 'iconv'
 module VK::Core
   UTF8REGEX = /[^a-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui
 
-  attr_accessor :app_id, 
-                :access_token, 
-                :expires_in,
-                :logger, 
-                :verbs, 
-                :attempts
+  attr_accessor :app_id, :access_token, :expires_in, :logger, :verbs, :attempts
 
   private
 
