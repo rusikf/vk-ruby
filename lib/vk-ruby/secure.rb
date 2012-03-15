@@ -12,9 +12,9 @@ class VK::Secure
   end
 
   def authorize(auto_save = true)
-    response = request(:path => "/oauth/access_token", 
-                       :params => {:client_id => @app_id, :client_secret => @app_secret, :grant_type => :client_credentials}, 
-                       :verbs => :get )
+    params = {:client_id => @app_id, :client_secret => @app_secret, :grant_type => :client_credentials }
+
+    response = request :get, "/oauth/access_token", params
 
     raise VK::AuthorizeException.new(response) if response['error']
 

@@ -1,4 +1,5 @@
 require 'net/https'
+require 'cgi'
 require 'transformer'
 require 'yaml'
 
@@ -11,4 +12,4 @@ rescue LoadError
   require 'json'
 end
 
-%w(ext connection executable/variable executable/chain executable/method core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}
+%w(ext connection core secure serverside standalone vk_exception).each{|lib| require "vk-ruby/#{lib}"}

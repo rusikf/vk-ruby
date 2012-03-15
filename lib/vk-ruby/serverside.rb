@@ -15,9 +15,9 @@ class VK::Serverside
   end
 
   def authorize(code, auto_save = true)
-    response = request( :path => "/oauth/access_token", 
-                        :params => {:client_id => @app_id, :client_secret => @app_secret, :code => code}, 
-                        :verbs => :get )
+    params = {:client_id => @app_id, :client_secret => @app_secret, :code => code}
+
+    response = request :get, "/oauth/access_token", params
 
     raise VK::AuthorizeException.new(response) if response['error']
 
