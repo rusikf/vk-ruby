@@ -14,12 +14,15 @@
 - getAds
 - setNameInMenu
 - resolveScreenName
+- execute
 - 
   friends:
     - get
     - getAppUsers
     - getOnline
     - getMutual
+  users:
+    - get
   photos:
     - getAlbums
     - get
