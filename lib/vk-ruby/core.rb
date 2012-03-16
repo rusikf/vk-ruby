@@ -10,19 +10,17 @@ module VK::Core
 
   def vk_call method_name, arr
     params = arr.shift || {}
-
     params[:access_token] ||= @access_token if @access_token
 
     response = request(params.delete(:verbs), "/method/#{method_name}", params)
 
-    raise VK::ApiException.new(method_name, response) if response['error']
+    raise VK::ApiException.new(method_name, response)  if response['error']
     response['response']
   end
 
   def request verbs, path, options = {}
     params = connection_params(options)
-
-    attempts = params.delete :attempts
+    attempts = params.delete(:attempts) || @attempts || 3
     http_verbs = (verbs || @verbs || :post).to_sym
 
     case http_verbs
@@ -31,9 +29,11 @@ module VK::Core
       else raise 'Not suported http verbs'
       end
 
-    result = connection(params).request(http_verbs, path, {}, body, attempts)
+    response = connection(params).request(http_verbs, path, {}, body, attempts)
 
-    parse(result.body)
+    raise VK::BadResponseException.new(response, verbs, path, options) if response.code.to_i >= 500
+
+    parse(response.body)
   end
 
   def connection params
@@ -47,8 +47,7 @@ module VK::Core
   def connection_params options
        {:host => ('api.vk.com' || options.delete(:host)),
         :port => (443 || options.delete(:port)),
-      :logger => (@logger || options.delete(:logger)),
-    :attempts => (@attempts || options.delete(:attempts))}
+      :logger => (@logger || options.delete(:logger))}
   end
 
   def parse string

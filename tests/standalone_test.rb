@@ -105,15 +105,8 @@ class StandaloneTest < MiniTest::Unit::TestCase
   end
 
   def test_raises_initialize
-    params = {}
-    assert_raises(RuntimeError) do
-      ::VK::Serverside.new params
-    end
-    
-    params[:app_id] = :test_id, 
-    assert_raises(RuntimeError) do
-      ::VK::Serverside.new params
-    end
+    assert_raises(RuntimeError){ ::VK::Serverside.new {} }
+    assert_raises(RuntimeError){ ::VK::Serverside.new :app_id => :test_id }
   end
 
 end
