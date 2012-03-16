@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module VK
-  class Exception < Exception
+  class ApiException < Exception
     attr_reader :vk_method, :error_code, :error_msg
 
     def initialize api_method, error_hash
@@ -22,10 +22,10 @@ module VK
     end
   end
 
-  class ResponseParse < Exception
-    def initialize exception
-      @error = exception.error
-      @error_msg = exception.error_msg
+  class ParseException < Exception
+    def initialize string
+      @error_msg = "Bad string\n" + string
+      super @error_msg
     end
   end
 end

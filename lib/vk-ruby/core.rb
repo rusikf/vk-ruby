@@ -3,17 +3,19 @@
 require 'iconv'
 
 module VK::Core
+
   attr_accessor :app_id, :access_token, :expires_in, :logger, :verbs, :attempts
 
   private
 
   def vk_call method_name, arr
     params = arr.shift || {}
-    raise 'undefined access token' unless params[:access_token] ||= @access_token
+
+    params[:access_token] ||= @access_token if @access_token
 
     response = request(params.delete(:verbs), "/method/#{method_name}", params)
 
-    raise VK::Exception.new(method_name, response) if response['error']
+    raise VK::ApiException.new(method_name, response) if response['error']
     response['response']
   end
 
@@ -24,12 +26,9 @@ module VK::Core
     http_verbs = (verbs || @verbs || :post).to_sym
 
     case http_verbs
-      when :post
-        body = http_params(options)
-      when :get
-        path << '?' + http_params(options)
-      else
-        raise 'Not suported http verbs'
+      when :post then body = http_params(options)
+      when :get  then path << '?' + http_params(options)
+      else raise 'Not suported http verbs'
       end
 
     result = connection(params).request(http_verbs, path, {}, body, attempts)
@@ -61,10 +60,11 @@ module VK::Core
       @logger.error "Invalid encoding" if @logger
 
       if attempt == 1
-        string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ") ).first[0..-2]
-        string.gsub! /[^A-za-z0-9а-яА-Я\\\'\"\,\[\]\{\}\.\:\_\s\/]/xui, ''
+        string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ")).first[0..-2]
+        string.gsub!(/[^а-яa-z0-9\\\'\"\,\[\]\{\}\.\:\_\s\/]/i, '?')
+        string.gsub!(/(\s\s)*/, '')
       else 
-        raise ::VK::ResponseParse.new(exxxc)
+        raise ::VK::ParseException, string
       end
 
       attempt += 1; retry

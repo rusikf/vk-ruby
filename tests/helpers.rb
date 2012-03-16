@@ -43,9 +43,7 @@ end
 
 
 def random_params(count = 3)
-  h = {}
-  count.times{h[rand_str] = rand_str}
-  h
+  (0...count).inject({}){|hash, num| hash[rand_str] = rand_str; hash}
 end
 
 def rand_str(length=7)

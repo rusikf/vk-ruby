@@ -116,16 +116,4 @@ class StandaloneTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_raises_request
-    @app.access_token = nil
-      
-    cycle @app, @base_api do |obj, method_name, is_group|
-      unless is_group
-        assert_raises(RuntimeError) do
-          obj.method(method_name.to_sym).call
-        end
-      end
-    end
-  end
-
 end

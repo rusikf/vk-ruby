@@ -3,9 +3,7 @@ require File.expand_path('../helpers', __FILE__)
 class ServersideTest < MiniTest::Unit::TestCase
   def setup
     @base_api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/../lib/vk-ruby/api/base.yml" ))
-    @app = ::VK::Serverside.new :app_id => :test_id, 
-                                :app_secret => :test_secret, 
-                                :access_token => :test_token
+    @app = ::VK::Serverside.new :app_id => :test_id, :app_secret => :test_secret, :access_token => :test_token
   end
 
   def test_init_attributes
@@ -78,18 +76,6 @@ class ServersideTest < MiniTest::Unit::TestCase
     params[:app_id] = :test_id, 
     assert_raises(RuntimeError) do
       ::VK::Serverside.new params
-    end
-  end
-
-  def test_raises_request
-    @app.access_token = nil
-      
-    cycle @app, @base_api do |obj, method_name, is_group|
-      unless is_group
-        assert_raises(RuntimeError) do
-          obj.method(method_name.to_sym).call
-        end
-      end
     end
   end
 
