@@ -13,7 +13,7 @@ class ExceptionsTest < MiniTest::Unit::TestCase
   end
 
   def test_api_errors
-    response = lambda { |request| {:body => {:error => {:error_code => 1, :error_description => 'discription'}}.to_json }}
+    response = lambda { |request| {:body => {'error' => {'error_code' => 1, 'error_description' => 'discription'}}.to_json }}
     stub_request(:post, /https:\/\/api.vk.com\/method/).to_return response
 
     assert_raises(::VK::ApiException){ @app.getProfiles :uids => '123' }

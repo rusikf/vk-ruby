@@ -12,10 +12,14 @@ end
 
 class Hash
   def stringify
-   inject({}) do |options, (key, value)|
-     options[key.to_s] = value.to_s
-     options
-   end
+    inject({}) do |options, (key, value)|
+      options[key.to_s] = value.to_s
+      options
+    end
+  end
+
+  def to_json
+    Oj.dump self
   end
 
   def stringify!

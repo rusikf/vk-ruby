@@ -16,12 +16,11 @@ Gem::Specification.new do |gem|
     
   gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
       
-  gem.add_runtime_dependency 'transformer',   '~> 0.2.2'
-  gem.add_runtime_dependency 'json',          '~> 1.6'
+  gem.add_runtime_dependency 'transformer', '~> 0.2.2'
+  gem.add_runtime_dependency 'oj', '~> 1.0.6'
 
   gem.add_development_dependency 'rake', '~> 0.9'
   gem.add_development_dependency 'minitest', '~> 2.8'
-  gem.add_development_dependency 'yajl-ruby', '~> 1.0'
   gem.add_development_dependency 'webmock', '~> 1.0'
 
   gem.require_paths = ['lib']

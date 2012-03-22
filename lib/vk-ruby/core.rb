@@ -58,6 +58,7 @@ module VK::Core
 
     response = connection(params).request(http_verbs, path, {}, body, attempts)
     raise VK::BadResponseException.new(response, verbs, path, options) if response.code.to_i >= 500
+
     parse response.body
   end
 
@@ -76,23 +77,7 @@ module VK::Core
   end
 
   def parse string
-    attempt = 1
-
-    # begin
-      ::JSON.parse(string)
-    # rescue ::JSON::ParserError => exxxc
-    #   logger.error "Invalid encoding" if logger
-
-    #   if attempt == 1
-    #     string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ")).first[0..-2]
-    #     string.gsub!(/[^а-яa-z0-9\\\'\"\,\[\]\{\}\.\:\_\s\/]/i, '?')
-    #     string.gsub!(/(\s\s)*/, '')
-    #   else 
-    #     raise ::VK::ParseException, string
-    #   end
-
-    #   attempt += 1; retry
-    end
+    Oj.load string
   end
   
 end
