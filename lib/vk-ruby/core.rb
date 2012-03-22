@@ -78,20 +78,20 @@ module VK::Core
   def parse string
     attempt = 1
 
-    begin
+    # begin
       ::JSON.parse(string)
-    rescue ::JSON::ParserError => exxxc
-      logger.error "Invalid encoding" if logger
+    # rescue ::JSON::ParserError => exxxc
+    #   logger.error "Invalid encoding" if logger
 
-      if attempt == 1
-        string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ")).first[0..-2]
-        string.gsub!(/[^а-яa-z0-9\\\'\"\,\[\]\{\}\.\:\_\s\/]/i, '?')
-        string.gsub!(/(\s\s)*/, '')
-      else 
-        raise ::VK::ParseException, string
-      end
+    #   if attempt == 1
+    #     string = ::Iconv.iconv("UTF-8//IGNORE", "UTF-8", (string + " ")).first[0..-2]
+    #     string.gsub!(/[^а-яa-z0-9\\\'\"\,\[\]\{\}\.\:\_\s\/]/i, '?')
+    #     string.gsub!(/(\s\s)*/, '')
+    #   else 
+    #     raise ::VK::ParseException, string
+    #   end
 
-      attempt += 1; retry
+    #   attempt += 1; retry
     end
   end
   
