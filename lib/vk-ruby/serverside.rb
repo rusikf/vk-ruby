@@ -6,25 +6,26 @@ class VK::Serverside
 
   attr_accessor :app_secret
 
-  def initialize(p={})
-    p.each{|k,v| instance_variable_set(:"@#{k}", v) }
-    raise 'undefined application id' unless @app_id
-    raise 'undefined application secret' unless @app_secret
-    
-    @settings ||= 'notify,friends,offline' 
+  def app_secret
+    @app_secret ? @app_secret : VK.const_defined?(:APP_SECRET) ? VK::APP_SECRET : nil
+  end
 
+  def settings
+    @settings ? @settings : VK.const_defined?(:SETTINGS) ? VK::SETTINGS : 'notify,friends,offline'
+  end
+
+  def initialize params = {}
+    params.each{|k,v| instance_variable_set(:"@#{k}", v) }
+    raise 'undefined application id' unless self.app_id
+    raise 'undefined application secret' unless self.app_secret
     transform base_api, self.method(:vk_call)
   end
 
-  def authorize(code, auto_save = true)
-    params = {:client_id => @app_id, :client_secret => @app_secret, :code => code}
-
-    response = request :get, "/oauth/access_token", params
-
+  def authorize code, auto_save = true
+    params = {:client_id => self.app_id, :client_secret => self.app_secret, :code => code}
+    response = request(:get, "/oauth/access_token", params)
     raise VK::AuthorizeException.new(response) if response['error']
-
     response.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
-
     response
   end
 end

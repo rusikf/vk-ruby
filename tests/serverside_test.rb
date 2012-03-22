@@ -50,7 +50,7 @@ class ServersideTest < MiniTest::Unit::TestCase
 
     cycle @app, @base_api do |obj, method_name, is_group|
       unless is_group
-        params = random_params.merge!(:access_token => :test_token, :verbs => 'get')
+        params = random_params.merge!(:access_token => :test_token, :verbs => :get)
         assert_equal obj.method(method_name.to_sym).call(params), params.stringify
       end
     end

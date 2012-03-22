@@ -5,7 +5,8 @@ require 'cgi'
 require 'transformer'
 require 'yaml'
 
-module VK; end
+module VK
+end
 
 begin
   require 'yajl'
