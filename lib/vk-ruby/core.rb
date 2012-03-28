@@ -1,7 +1,5 @@
 # encoding: UTF-8
 
-require 'iconv'
-
 module VK::Core
 
   attr_accessor :app_id, :access_token, :logger, :verbs, :attempts

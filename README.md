@@ -1,30 +1,24 @@
-#vk-ruby [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
-Ruby wrapper for vk.com API [...read more ](http://suckless.ru/post/10080778911/vk-ruby "САКЛЕСС!!")
+#VK-RUBY [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)[![endorse](http://api.coderwall.com/zinenko/endorsecount.png)](http://coderwall.com/zinenko)
+
+Ruby wrapper for vk.com API.
 
 ## Installation
-`gem install vk-ruby`
 
-## What is needed to work with api?
-1. Create an object type of application you require (Serverside, Standalone, Secure)
-2. Authorize [doc](http://vkontakte.ru/developers.php?o=-1&p=%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F&s=0)
+```
+gem install vk-ruby
+```
+
+## Example
 
 ```.ruby
 # Serverside Application
 require 'vk-ruby'
 
-app = VK::Serverside.new(:app_id => APP_ID, :app_secret => APP_SECRET)
+app = VK::Serverside.new app_id: APP_ID, app_secret: APP_SECRET
 
-if app.authorize(CODE) 
-   app.search(:q => 'Sting').each do |track|
-     puts track.inspect  # => Sting tracks
-   end
-end
+app.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize CODE
+# => Sting tracks
 ```
-## Application Example
-
-- ##### Standalone:
-
-    [vk-console](http://github.com/zinenko/vk-console )
 
 ## Contributing to vk-ruby
  
@@ -38,5 +32,4 @@ end
 
 ## Copyright
 
-Copyright (c) 2011 Andrew Zinenko. See LICENSE.txt for
-further details.
+Copyright (c) 2011 Andrew Zinenko. See LICENSE.txt for further details.
