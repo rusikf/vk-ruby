@@ -1,4 +1,6 @@
-#VK-RUBY [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)[![endorse](http://api.coderwall.com/zinenko/endorsecount.png)](http://coderwall.com/zinenko)
+#VK-RUBY 
+[![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
+[![endorse](http://api.coderwall.com/zinenko/endorsecount.png)](http://coderwall.com/zinenko)
 
 Ruby wrapper for vk.com API.
 
@@ -16,7 +18,7 @@ require 'vk-ruby'
 
 app = VK::Serverside.new app_id: APP_ID, app_secret: APP_SECRET
 
-app.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize CODE
+app.audio.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize CODE
 # => Sting tracks
 ```
 
