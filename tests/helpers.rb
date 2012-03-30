@@ -4,9 +4,11 @@ require 'webmock/minitest'
 
 class String 
   def to_params
-    result = {}
-    self.split('&').map{|str| result[str.split('=')[0]]=str.split('=')[1] }
-    result
+    self.split('&').inject({}) do |hash, element|  
+      k, v = element.split('=')
+      hash[k] = v
+      hash
+    end
   end
 end
 
@@ -19,7 +21,7 @@ class Hash
   end
 
   def to_json
-    Oj.dump self
+    MultiJson.encode self
   end
 
   def stringify!

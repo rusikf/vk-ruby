@@ -4,7 +4,7 @@ require 'net/https'
 require 'cgi'
 require 'transformer'
 require 'yaml'
-require 'oj'
+require 'multi_json'
 
 module VK
 end
