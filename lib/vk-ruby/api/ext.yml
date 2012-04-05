@@ -66,3 +66,30 @@ subscriptions:
   - getFollowers
   - follow
   - unfollow
+ads: 
+  - getAccounts
+  - getClients
+  - createClients
+  - updateClients
+  - deleteClients
+  - getCampaigns
+  - createCampaigns
+  - updateCampaigns
+  - deleteCampaigns
+  - getAds
+  - getAdsLayout
+  - getAdsTargeting
+  - createAds
+  - updateAds
+  - deleteAds
+  - getStatistics
+  - getDemographics
+  - getBudget
+  - getOfficeUsers
+  - addOfficeUsers
+  - removeOfficeUsers
+  - getTargetingStats
+  - getSuggestions
+  - getUploadURL
+  - getFloodStats
+  - getRejectionReason
