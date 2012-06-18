@@ -1,6 +1,5 @@
 #VK-RUBY 
 [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
-[![endorse](http://api.coderwall.com/zinenko/endorsecount.png)](http://coderwall.com/zinenko)
 
 Ruby wrapper for vk.com API.
 VK-RUBY is compatible with Ruby 1.9.2, 1.9.3 and RBX.
