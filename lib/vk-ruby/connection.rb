@@ -37,7 +37,7 @@ class VK::Connection
       http.start &requester
     rescue Timeout::Error, Errno::EPIPE, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNABORTED, Errno::ETIMEDOUT
       reset!
-      attempts == 3 ? raise : (attempts += 1; retry)
+      attempts == 0 ? raise : (attempts -= 1; retry)
     end
   end
 
