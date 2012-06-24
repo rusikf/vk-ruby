@@ -4,7 +4,7 @@ class VK::Serverside
   include VK::Core
   include ::Transformer
 
-  attr_accessor :app_secret
+  attr_accessor :app_secret, :expires_in
 
   def app_secret
     @app_secret ? @app_secret : VK.const_defined?(:APP_SECRET) ? VK::APP_SECRET : nil

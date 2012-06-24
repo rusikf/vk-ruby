@@ -4,7 +4,7 @@ class VK::Standalone
   include VK::Core
   include ::Transformer
 
-  attr_accessor :settings
+  attr_accessor :settings, :expires_in
 
   def settings
     @settings ? @settings : VK.const_defined?(:SETTINGS) ? VK::SETTINGS : 'notify,friends'
