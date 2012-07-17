@@ -1,47 +1,30 @@
 # encoding: UTF-8
 
 module VK::Core
-  include Configurable
+  extend VK::Configurable
+
+  attr_accessor :faraday_middleware
 
   attr_configurable :app_id, :access_token, :ca_path, :ca_file, :verify_mode, :logger, :proxy
 
-  attr_configurable :verbs,        :post
-  attr_configurable :attempts,     5
-  attr_configurable :timeout,      2
-  attr_configurable :open_timeout, 3
+  attr_configurable :verbs,           default: :post
+  attr_configurable :attempts,        default: 5
+  attr_configurable :timeout,         default: 2
+  attr_configurable :open_timeout,    default: 3
+  attr_configurable :default_adapter, default: Faraday.default_adapter
 
   [:base, :ext, :secure].each do |name|
-    class_eval(<<-EVAL, __FILE__, __LINE__)
+    class_eval(<<-EVAL, __FILE__, __LINE__ + 1)
       def #{name}_api
         @@#{name}_api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/api/#{name}.yml" ))
       end
     EVAL
   end
 
-  # Call vk.com api method.
-  #
-  # @param method_name a vk.com api method name
-  # @param arr a array of method params
-  #
-  # @example
-  #   @application.vk_call('api_method_name', [{:a => 1, :b => "My String"}])
-  #   => request to "https://api.vk.com/method/api_method_name?a=1&b=My+String"
-  #
-  # @return the vk.com api response hash
-
   def vk_call(method_name, arr)
-    params = arr.shift || {}
-    params[:access_token] ||= self.access_token
+    response = request("/method/#{method_name}", (arr.shift || {}))
 
-    response = request("/method/#{method_name}", params)
-
-    if response['error'] 
-      if response['error']['code'].to_i == 5
-        raise VK::RevokeAccessException.new(method_name, response, params[:access_token])
-      else
-        raise VK::ApiException.new(method_name, response) if response['error']
-      end
-    end
+    raise VK::ApiException.new(method_name, response) if response['error']
 
     response['response']
   end
@@ -49,38 +32,40 @@ module VK::Core
   private
 
   def request(path, options = {})
-    attempts = params.delete(:attempts) || self.attempts
-    verbs = params.delete(:verbs) || self.verbs
-    params = self.params.merge(options)
+    options[:access_token] ||= self.access_token
 
-    case verbs
-    when :post then body = self.class.encode_params(options)
-    when :get  then path << '?' << self.class.http_params(options)
+    attempts = options.delete(:attempts) || self.attempts
+    host = options.delete(:host) || 'https://api.vk.com'
+    verb = (options[:verb] ||= self.verbs)
+
+    case verb.downcase.to_sym
+    when :post then body = encode_params(options)
+    when :get  then path << '?' << encode_params(options)
     else raise 'Not suported http verbs'
     end
 
-    response = connection(params).request(http_verbs, path, params, body, attempts)
+    request_options = {params: (verb == "get" ? params : {})}
 
-    raise VK::BadResponseException.new(response, verbs, path, options) if response.code.to_i >= 500
+    response = Faraday.new(host, request_options, &faraday_middleware)
 
-    parse response.body 
+    raise VK::BadResponseException.new(response, verbs, path, options) if response.code.to_i != 200
+
+    response
   end
 
-  # Encodes a given hash into a query string.
-  #
-  # @param params_hash a hash of values to CGI-encode and appropriately join
-  #
-  # @example
-  #   VK::Core.encode_params({:a => 2, :b => "My String"})
-  #   => "a=2&b=My+String"
-  #
-  # @return the appropriately-encoded string
+  def faraday_middleware
+    @faraday_middleware ||= proc do
+      faraday.request  :url_encoded
+      faraday.response :logger  
+      faraday.adapter  self.default_adapter
+    end
+  end
 
-  def self.encode_params(param_hash)
-    ((param_hash || {}).sort_by{|k, v| k.to_s}.collect do |key_and_value|
-      key_and_value[1] = MultiJson.dump(key_and_value[1]) unless key_and_value[1].is_a? String
-      "#{key_and_value[0].to_s}=#{CGI.escape key_and_value[1]}"
-    end).join("&")
+  def encode_params(params)
+    params.map do |key, value|
+      value = MultiJson.dump(value) unless value.is_a?(String)
+      "#{key}=#{CGI.escape value}"
+    end.join("&")
   end
   
 end

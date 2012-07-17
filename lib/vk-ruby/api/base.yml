@@ -114,3 +114,16 @@
     - getById
     - isMember
     - getMembers
+  board:
+    - getTopicsnew
+    - deleteTopicnew
+    - getCommentsnew
+    - addCommentnew
+    - editCommentnew
+    - deleteCommentnew
+    - restoreCommentnew
+    - addTopicnew
+    - closeTopicnew
+    - fixTopicnew
+    - unfixTopicnew
+    - deleteTopic

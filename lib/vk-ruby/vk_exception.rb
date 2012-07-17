@@ -20,14 +20,4 @@ module VK
     end
   end
 
-  class RevokeAccessException < Exception
-    attr_reader :vk_method, :error_code, :error_msg, :access_token
-
-    def initialize(api_method, error_hash, access_token)
-      @access_token = access_token
-      @vk_method, @error_code = api_method, error_hash['error']['error_code'].to_i
-      @error_msg = "Revoke access for this token #{@access_token}"
-      super @error_msg
-    end
-  end
 end
