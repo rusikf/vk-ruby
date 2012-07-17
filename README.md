@@ -34,4 +34,4 @@ app.audio.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize C
 
 ## Copyright
 
-Copyright (c) 2011 Andrew Zinenko. See LICENSE.txt for further details.
+Copyright (c) 2011 [Andrew Zinenko](http://izinenko.ru). See LICENSE.txt for further details.
