@@ -27,6 +27,7 @@
     - getAlbums
     - get
     - getById
+    - getAll
     - createAlbum
     - editAlbum
     - edit

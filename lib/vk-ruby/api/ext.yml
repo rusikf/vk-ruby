@@ -32,7 +32,6 @@ photos:
   - editComment
   - deleteComment
   - restoreComment
-  - getAll
   - getUserPhotos
   - getTags
   - putTag
