@@ -17,6 +17,6 @@ require 'rake/testtask'
 task :default => :test
 
 Rake::TestTask.new do |test|
-  test.pattern = 'tests/configurable.rb'
+  test.pattern = 'tests/(configurable|serverside).rb'
   test.verbose = true
 end
