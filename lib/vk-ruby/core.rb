@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 module VK::Core
-  extend VK::Configurable
+  extend ::VK::Configurable
 
   attr_accessor :faraday_middleware
 
