@@ -2,7 +2,7 @@
 
 module VK::Configurable
 	
-  def attr_configurable *arr
+  def attr_configurable(*arr)
   	params = arr.pop if arr.last.is_a?(Hash)
 
   	arr.each do |a_name|
@@ -22,6 +22,10 @@ module VK::Configurable
 
 	  end
 
+  end
+
+  def extended(cls)
+  	cls.include self
   end
 
 end

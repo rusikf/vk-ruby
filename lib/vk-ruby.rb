@@ -1,10 +1,12 @@
 # encoding: UTF-8
 
 require 'faraday'
+require 'faraday_middleware'
 require 'cgi'
 require 'transformer'
 require 'yaml'
 require 'multi_json'
+require 'forwardable'
 
 module VK
 end

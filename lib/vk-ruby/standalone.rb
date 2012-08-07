@@ -2,17 +2,19 @@
 
 class VK::Standalone 
   include VK::Core
-  include ::Transformer
+  include Transformer
+
+  extend ::VK::Configurable
 
   attr_accessor :settings, :expires_in
 
-  def settings
-    @settings ? @settings : VK.const_defined?(:SETTINGS) ? VK::SETTINGS : 'notify,friends'
-  end
+  attr_configurable :settings, default: 'notify,friends'
 
-  def initialize(p={})
-    p.each{|k,v| instance_variable_set(:"@#{k}", v) }
+  def initialize(params={})
+    params.each{|k,v| instance_variable_set(:"@#{k}", v) }
+
     raise 'undefined application id' unless self.app_id
+    
     transform base_api, self.method(:vk_call)
     transform ext_api, self.method(:vk_call)
   end

@@ -1,6 +1,7 @@
 # encoding: UTF-8
 
 module VK
+
   class ApiException < Exception
     attr_reader :vk_method, :error_code, :error_msg
 
@@ -16,6 +17,16 @@ module VK
 
     def initialize(error_hash)
       @error, @error_msg = error_hash['error'], "Error #{@error} - #{error_hash['error_description']}"
+      super @error_msg
+    end
+  end
+
+  class BadResponseException < Exception
+    attr_reader :response, :params
+
+    def initialize(response, verbs, path, options)
+      @response, @params = response, params
+      @error_msg = "Bad response"
       super @error_msg
     end
   end

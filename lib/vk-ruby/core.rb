@@ -2,16 +2,19 @@
 
 module VK::Core
   extend ::VK::Configurable
+  extend Forwardable
 
   attr_accessor :faraday_middleware
 
   attr_configurable :app_id, :access_token, :ca_path, :ca_file, :verify_mode, :logger, :proxy
 
-  attr_configurable :verbs,           default: :post
+  attr_configurable :verb,            default: :post
   attr_configurable :attempts,        default: 5
   attr_configurable :timeout,         default: 2
   attr_configurable :open_timeout,    default: 3
-  attr_configurable :default_adapter, default: Faraday.default_adapter
+  attr_configurable :adapter, default: Faraday.default_adapter
+
+  def_delegators :logger, :debug, :info, :warn, :error, :fatal, :level, :level=
 
   [:base, :ext, :secure].each do |name|
     class_eval(<<-EVAL, __FILE__, __LINE__ + 1)
@@ -24,47 +27,52 @@ module VK::Core
   def vk_call(method_name, arr)
     response = request("/method/#{method_name}", (arr.shift || {}))
 
-    raise VK::ApiException.new(method_name, response) if response['error']
+    raise VK::ApiException.new(method_name, response.body) if response.body['error']
 
-    response['response']
+    response.body['response']
   end
 
   private
 
   def request(path, options = {})
-    options[:access_token] ||= self.access_token
-
     attempts = options.delete(:attempts) || self.attempts
-    host = options.delete(:host) || 'https://api.vk.com'
-    verb = (options[:verb] ||= self.verbs)
 
-    case verb.downcase.to_sym
-    when :post then body = encode_params(options)
-    when :get  then path << '?' << encode_params(options)
-    else raise 'Not suported http verbs'
+    host = options.delete(:host)  || 'https://api.vk.com'
+    verb = (options.delete(:verb) || self.verb).downcase.to_sym
+
+    options[:access_token] ||= self.access_token if host == 'https://api.vk.com'
+
+    request_options = {params: {}}
+
+    case verb
+    when :post
+      body = encode_params(options)
+    when :get
+      path << '?' << encode_params(options)
+      body = {}
+    else raise 'Not supported http verbs'
     end
 
-    request_options = {params: (verb == "get" ? params : {})}
+    response = Faraday.new(host, request_options, &faraday_middleware).send(verb, path, body)
 
-    response = Faraday.new(host, request_options, &faraday_middleware)
-
-    raise VK::BadResponseException.new(response, verbs, path, options) if response.code.to_i != 200
+    raise VK::BadResponseException.new(response, verb, path, options) if response.status.to_i != 200
 
     response
   end
 
   def faraday_middleware
-    @faraday_middleware ||= proc do
+    @faraday_middleware ||= proc do |faraday|
+      faraday.adapter  self.adapter
       faraday.request  :url_encoded
-      faraday.response :logger  
-      faraday.adapter  self.default_adapter
+      faraday.response :json, content_type: /\bjson$/
+      faraday.response :xml,  content_type: /\bxml$/
     end
   end
 
   def encode_params(params)
     params.map do |key, value|
-      value = MultiJson.dump(value) unless value.is_a?(String)
-      "#{key}=#{CGI.escape value}"
+      value = MultiJson.dump(value) unless value.is_a?(String) || value.is_a?(Symbol)
+      "#{key}=#{CGI.escape value.to_s}"
     end.join("&")
   end
   

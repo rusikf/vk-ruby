@@ -115,15 +115,15 @@
     - isMember
     - getMembers
   board:
-    - getTopicsnew
-    - deleteTopicnew
-    - getCommentsnew
-    - addCommentnew
-    - editCommentnew
-    - deleteCommentnew
-    - restoreCommentnew
-    - addTopicnew
-    - closeTopicnew
-    - fixTopicnew
-    - unfixTopicnew
+    - getTopics
+    - deleteTopic
+    - getComments
+    - addComment
+    - editComment
+    - deleteComment
+    - restoreComment
+    - addTopic
+    - closeTopic
+    - fixTopic
+    - unfixTopic
     - deleteTopic
