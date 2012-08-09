@@ -3,8 +3,8 @@ require File.expand_path('../helpers', __FILE__)
 class ServersideTest < MiniTest::Unit::TestCase
   def setup
     @base_api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/../lib/vk-ruby/api/base.yml" ))
-    
     @app = ::VK::Serverside.new app_id: :test_id, app_secret: :test_secret, access_token: :test_token
+    create_stubs!
   end
 
   def test_init_attributes

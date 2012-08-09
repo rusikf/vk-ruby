@@ -1,34 +1,37 @@
 require "vk-ruby"
 require 'minitest/autorun'
 require 'webmock'
+
 include WebMock::API
 
-stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| 
-  {
-    body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
-    headers: {"Content-Type" => 'application/json'}
-  }  
-})
+def create_stubs!
+  stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| 
+    {
+      body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
+      headers: {"Content-Type" => 'application/json'}
+    }  
+  })
 
-stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
-  body = request.body.to_params
-  status = body.has_key?('http_error') ? 500 : 200
+  stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
+    body = request.body.to_params
+    status = body.has_key?('http_error') ? 500 : 200
 
-  response = body.has_key?('error') ? {'error' => {}} : {'response' => body}
+    response = body.has_key?('error') ? {'error' => {}} : {'response' => body}
 
-  {
-    body: response.to_json,
-    headers: {"Content-Type" => 'application/json'},
-    status: status
-  } 
-})
+    {
+      body: response.to_json,
+      headers: {"Content-Type" => 'application/json'},
+      status: status
+    } 
+  })
 
-stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request| 
-  {
-    body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
-    headers: {"Content-Type" => 'application/json'}
-  }  
-})
+  stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request| 
+    {
+      body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
+      headers: {"Content-Type" => 'application/json'}
+    }  
+  })
+end
 
 class String 
   def to_params

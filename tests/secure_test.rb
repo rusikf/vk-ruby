@@ -4,6 +4,7 @@ class SecureServerTest < MiniTest::Unit::TestCase
   def setup
     @app = ::VK::Secure.new app_id: :test_id, app_secret: :test_secret
     @secure_api = YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/../lib/vk-ruby/api/secure.yml" ))
+    create_stubs!
   end
 
   def test_init_attributes

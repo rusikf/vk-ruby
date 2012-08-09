@@ -62,10 +62,17 @@ module VK::Core
 
   def faraday_middleware
     @faraday_middleware ||= proc do |faraday|
-      faraday.adapter  self.adapter
       faraday.request  :url_encoded
+      
       faraday.response :json, content_type: /\bjson$/
       faraday.response :xml,  content_type: /\bxml$/
+
+      faraday.response :normalize_utf
+      faraday.response :validate_utf
+      
+      faraday.response :logger
+      
+      faraday.adapter  self.adapter
     end
   end
 

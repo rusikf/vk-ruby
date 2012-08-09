@@ -5,6 +5,7 @@ class StandaloneTest < MiniTest::Unit::TestCase
     @base_api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/../lib/vk-ruby/api/base.yml" ))
     @ext_api  ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/../lib/vk-ruby/api/ext.yml" ))
     @app = ::VK::Standalone.new app_id: :test_id, access_token: :test_token
+    create_stubs!
   end
 
   def test_init_attributes

@@ -3,6 +3,7 @@ require File.expand_path('../helpers', __FILE__)
 class ExceptionsTest < MiniTest::Unit::TestCase
   def setup
     @app = VK::Standalone.new app_id: 2657696
+    create_stubs!
   end
 
   def test_bad_requests
