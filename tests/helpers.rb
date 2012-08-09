@@ -1,8 +1,15 @@
 require "vk-ruby"
 require 'minitest/autorun'
 require 'webmock'
+require 'yaml'
 
 include WebMock::API
+
+#/Users/andrewzinenko/dev/vk-ruby
+
+YAML.load_file("#{Dir.pwd}/config.yml").each do |name, value|
+  self.class.const_set name.upcase, value
+end
 
 def create_stubs!
   stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| 
@@ -77,7 +84,6 @@ def cycle(object, elements, &block)
       end
     end
 end
-
 
 def random_params(count = 3)
   (0...count).inject({}){|hash, num| hash[rand_str] = rand_str; hash}

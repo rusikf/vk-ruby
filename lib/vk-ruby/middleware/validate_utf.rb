@@ -9,7 +9,11 @@ module Faraday
 
     def call(environment)
       @app.call(environment).on_complete do |env|
-        puts env[:body] = env[:body].force_encoding('UTF-8').gsub(/[^\x00-\x7F]/,'').chars.select{|i| i.valid_encoding?}.join
+        
+        if (env[:body] = env[:body].force_encoding('UTF-8')).valid_encoding?        
+          env[:body] = env[:body].chars.select{|i| i.valid_encoding?}.join
+        end
+
         env
       end
     end

@@ -12,7 +12,7 @@ module VK::Core
   attr_configurable :attempts,        default: 5
   attr_configurable :timeout,         default: 2
   attr_configurable :open_timeout,    default: 3
-  attr_configurable :adapter, default: Faraday.default_adapter
+  attr_configurable :adapter,         default: Faraday.default_adapter
 
   def_delegators :logger, :debug, :info, :warn, :error, :fatal, :level, :level=
 
@@ -69,8 +69,6 @@ module VK::Core
 
       faraday.response :normalize_utf
       faraday.response :validate_utf
-      
-      faraday.response :logger
       
       faraday.adapter  self.adapter
     end
