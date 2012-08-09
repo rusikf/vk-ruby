@@ -69,6 +69,7 @@ module VK::Core
 
       faraday.response :normalize_utf
       faraday.response :validate_utf
+      faraday.response :vk_logger
       
       faraday.adapter  self.adapter
     end

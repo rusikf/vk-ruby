@@ -14,7 +14,7 @@ end
 def create_stubs!
   stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| 
     {
-      body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
+      body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
     }  
   })
@@ -26,7 +26,7 @@ def create_stubs!
     response = body.has_key?('error') ? {'error' => {}} : {'response' => body}
 
     {
-      body: response.to_json,
+      body: MultiJson.dump(response),
       headers: {"Content-Type" => 'application/json'},
       status: status
     } 
@@ -34,7 +34,7 @@ def create_stubs!
 
   stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request| 
     {
-      body: {'response' => URI.parse(request.uri).query.to_params}.to_json,
+      body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
     }  
   })
@@ -56,17 +56,6 @@ class Hash
       options[key.to_s] = value.to_s
       options
     end
-  end
-
-  def to_json
-    MultiJson.encode self
-  end
-
-  def stringify!
-   each do |key, value|
-     delete(key)
-     store(key.to_s, value.to_s)
-   end
   end
 end
 
