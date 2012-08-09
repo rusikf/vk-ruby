@@ -5,8 +5,6 @@ require 'yaml'
 
 include WebMock::API
 
-#/Users/andrewzinenko/dev/vk-ruby
-
 YAML.load_file("#{Dir.pwd}/config.yml").each do |name, value|
   self.class.const_set name.upcase, value
 end
