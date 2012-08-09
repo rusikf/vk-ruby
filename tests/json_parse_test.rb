@@ -15,8 +15,10 @@ class JsonParseTest < MiniTest::Unit::TestCase
     WebMock.allow_net_connect!
   end
 
-  def test_json
-    MultiJson.engine = :json_gem
+  [:json_gem, :json_pure, :oj, :yajl].each do |engine|
+    defined_method "test_#{engine}" do 
+
+    MultiJson.engine = engine
 
     BAD_PROFILES.each do |uid|
       assert lambda{|i|
@@ -25,49 +27,10 @@ class JsonParseTest < MiniTest::Unit::TestCase
         rescue Faraday::Error::ParsingError => ex
           false
         end
-      }.call(uid), 'parsing error'
+      }.call(uid), "#{engine} parsing error"
+    end
+
     end
   end
 
-  def test_json_pure
-    MultiJson.engine = :json_pure
-
-    BAD_PROFILES.each do |uid|
-      assert lambda{|i|
-        begin
-          @app.getProfiles(uids: i, fields: @fields.join(','), verb: :get); true
-        rescue Faraday::Error::ParsingError
-          false
-        end
-      }.call(uid), 'parsing error'
-    end
-  end
-
-  def test_oj
-    MultiJson.engine = :oj
-
-    BAD_PROFILES.each do |uid|
-      assert lambda{|i|
-        begin
-          @app.getProfiles(uids: i, fields: @fields.join(','), verb: :get); true
-        rescue Faraday::Error::ParsingError
-          false
-        end
-      }.call(uid), 'parsing error'
-    end
-  end
-
-  def test_yajl
-    MultiJson.engine = :yajl
-
-    BAD_PROFILES.each do |uid|
-      assert lambda{|i|
-        begin
-          @app.getProfiles(uids: i, fields: @fields.join(','), verb: :get); false
-        rescue Faraday::Error::ParsingError
-          false
-        end
-      }.call(uid), 'parsing error'
-    end 
-  end
 end
