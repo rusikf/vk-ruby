@@ -2,7 +2,7 @@ require File.expand_path('../helpers', __FILE__)
 
 class JsonParseTest < MiniTest::Unit::TestCase
 
-  BAD_PROFILES = 21774501...21774512
+  BAD_PROFILES = 21774501...21774502
 
   def setup
     @app = VK::Standalone.new app_id: APP_ID,

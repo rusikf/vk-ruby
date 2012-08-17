@@ -17,4 +17,4 @@ module Faraday
   end
 end
 
-Faraday.register_middleware :response, normalize_utf: Faraday::Response::NormalizeUtf 
+Faraday.register_middleware :response, normalize_utf: Faraday::Response::NormalizeUtf

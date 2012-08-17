@@ -25,7 +25,7 @@ module Faraday
           CGI.unescape env[:body]
         end
 
-        debug "request #{method} -> #{params}"              
+        debug "request #{method} -> #{params}"
       end
 
       super
@@ -44,4 +44,4 @@ module Faraday
   end
 end
 
-Faraday.register_middleware :response, vk_logger: Faraday::Response::VkLogger 
+Faraday.register_middleware :response, vk_logger: Faraday::Response::VkLogger

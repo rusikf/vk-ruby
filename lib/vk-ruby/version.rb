@@ -1,5 +1,5 @@
 # encoding: UTF-8
 
-module VK  
+module VK
   VERSION = '0.8.5'
 end
