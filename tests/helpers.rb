@@ -5,19 +5,22 @@ require 'yaml'
 
 include WebMock::API
 
-YAML.load_file("#{Dir.pwd}/config.yml").each do |name, value|
-  self.class.const_set name.upcase, value
+if File.exists?("#{Dir.pwd}/config.yml")
+  YAML.load_file("#{Dir.pwd}/config.yml").each do |name, value|
+    self.class.const_set name.upcase, value
+  end
 end
 
 def create_stubs!
-  stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request| 
+  stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
     {
       body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
-    }  
+    }
   })
 
   stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
+
     body = request.body.to_params
     status = body.has_key?('http_error') ? 500 : 200
 
@@ -27,20 +30,20 @@ def create_stubs!
       body: MultiJson.dump(response),
       headers: {"Content-Type" => 'application/json'},
       status: status
-    } 
+    }
   })
 
-  stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request| 
+  stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request|
     {
       body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
-    }  
+    }
   })
 end
 
-class String 
+class String
   def to_params
-    self.split('&').inject({}) do |hash, element|  
+    self.split('&').inject({}) do |hash, element|
       k, v = element.split('=')
       hash[k] = v
       hash
@@ -64,7 +67,7 @@ def cycle(object, elements, &block)
     when Array
       elements.each {|element| cycle object, element, &block}
     else Hash
-      elements.each do |group_name, methods| 
+      elements.each do |group_name, methods|
         group = object.send(group_name.to_sym)
         block.call(group, group_name, true)
         cycle group, methods, &block

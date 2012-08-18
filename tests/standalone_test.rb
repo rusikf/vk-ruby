@@ -53,7 +53,7 @@ class StandaloneTest < MiniTest::Unit::TestCase
 
   def test_base_post_request_params
     cycle @app, @base_api do |obj, method_name, is_group|
-      unless is_group     
+      unless is_group
         params = random_params.merge!(access_token: :test_token)
         assert_equal obj.method(method_name.to_sym).call(params), params.stringify
       end
@@ -62,7 +62,7 @@ class StandaloneTest < MiniTest::Unit::TestCase
 
   def test_ext_post_request_params
     cycle @app, @ext_api do |obj, method_name, is_group|
-      unless is_group     
+      unless is_group
         params = random_params.merge!(access_token: :test_token)
         assert_equal obj.method(method_name.to_sym).call(params), params.stringify
       end

@@ -19,7 +19,7 @@ class SecureServerTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_authorization 
+  def test_authorization
     params = {client_id: :test_id, client_secret: :test_secret, grant_type: :client_credentials }
     assert_equal @app.authorize , params.stringify
   end
@@ -28,7 +28,7 @@ class SecureServerTest < MiniTest::Unit::TestCase
     assert_raises(RuntimeError) do
       ::VK::Serverside.new {}
     end
-    
+
     assert_raises(RuntimeError) do
       ::VK::Serverside.new app_id: :test_id
     end

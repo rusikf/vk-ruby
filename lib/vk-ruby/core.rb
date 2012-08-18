@@ -40,8 +40,9 @@ module VK
     end
 
     def faraday_middleware
-      proc do |faraday|
-        faraday.request  :url_encoded
+      @faraday_middleware || proc do |faraday|
+        faraday.request :multipart
+        faraday.request :url_encoded
 
         faraday.response :json, content_type: /\bjson$/
         faraday.response :xml,  content_type: /\bxml$/
@@ -63,16 +64,16 @@ module VK
 
       options[:access_token] ||= self.access_token if host == 'https://api.vk.com'
 
-      body = verb == :get ? {} : encode_params(options)
+      params, body = http_params(verb, options)
 
-      response = Faraday.new(host, http_params(options), &faraday_middleware).send(verb, path, body)
+      response = Faraday.new(host, params, &faraday_middleware).send(verb, path, body)
 
       raise VK::BadResponseException.new(response, verb, path, options) if response.status.to_i != 200
 
       response
     end
 
-    def http_params(options)
+    def http_params(verb, options)
       params = {}
 
       params[:timeout] = options.delete(:timeout) || self.timeout
@@ -93,8 +94,13 @@ module VK
         end
       end
 
-      params[:params] = options
-      params
+      if verb == :get
+        params[:params] = options
+        return params, {}
+      else
+        params[:params] = {}
+        return params, options
+      end
     end
 
     def encode_params(params)

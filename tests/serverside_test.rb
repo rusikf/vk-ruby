@@ -35,7 +35,7 @@ class ServersideTest < MiniTest::Unit::TestCase
 
   def test_post_request_params
     cycle @app, @base_api do |obj, method_name, is_group|
-      unless is_group     
+      unless is_group
         params = random_params.merge!(access_token: :test_token)
         assert_equal obj.method(method_name.to_sym).call(params), params.stringify
       end
@@ -51,7 +51,7 @@ class ServersideTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_authorization 
+  def test_authorization
     params = {code: :test_code, client_id: :test_id ,client_secret: :test_secret}
     assert_equal @app.authorize(params[:code]) , params.stringify
   end
@@ -60,7 +60,7 @@ class ServersideTest < MiniTest::Unit::TestCase
     assert_raises(RuntimeError) do
       ::VK::Serverside.new {}
     end
-     
+
     assert_raises(RuntimeError) do
       ::VK::Serverside.new app_id: :test_id
     end
