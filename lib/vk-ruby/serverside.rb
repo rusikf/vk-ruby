@@ -22,17 +22,17 @@ class VK::Serverside
 
   def authorize(code, auto_save = true)
     params = {host: 'https://oauth.vk.com',
-              client_id: self.app_id, 
-              client_secret: self.app_secret, 
-              code: code, 
+              client_id: self.app_id,
+              client_secret: self.app_secret,
+              code: code,
               verb: :get}
 
     response = request("/access_token", params)
 
     raise VK::AuthorizeException.new(response) if response.body['error']
 
-    response.body['response'].each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+    response.body.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 
-    response.body['response']
+    response.body
   end
 end

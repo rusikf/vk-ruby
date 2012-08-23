@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vk-ruby (0.8.5)
+    vk-ruby (0.9.0)
       faraday (~> 0.8.0)
       faraday_middleware (~> 0.8.8)
       multi_json (~> 1.3.6)
