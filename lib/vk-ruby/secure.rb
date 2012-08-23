@@ -23,8 +23,8 @@ class VK::Secure
 
   def authorize(auto_save = true)
     params = {host: 'https://oauth.vk.com',
-              client_id: self.app_id, 
-              client_secret: self.app_secret, 
+              client_id: self.app_id,
+              client_secret: self.app_secret,
               grant_type: :client_credentials,
               verb: :get}
 
@@ -32,8 +32,8 @@ class VK::Secure
 
     raise VK::AuthorizeException.new(response) if response.body['error']
 
-    response.body['response'].each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
+    response.body.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 
-    response.body['response']
+    response.body
   end
 end

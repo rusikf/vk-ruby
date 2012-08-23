@@ -35,7 +35,7 @@ def create_stubs!
 
   stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request|
     {
-      body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
+      body: MultiJson.dump(URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
     }
   })
