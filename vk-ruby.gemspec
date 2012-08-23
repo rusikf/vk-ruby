@@ -26,8 +26,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake',      '~> 0.9'
   gem.add_development_dependency 'minitest',  '~> 2.8'
   gem.add_development_dependency 'webmock',   '~> 1.0'
-  gem.add_development_dependency 'oj',        '~> 1.0.6' unless RUBY_PLATFORM == 'java'
-  gem.add_development_dependency 'yajl-ruby', '~> 1.1.0' unless RUBY_PLATFORM == 'java'
+  gem.add_development_dependency 'oj',        '~> 1.0.6' unless (RUBY_PLATFORM == 'java') || (RUBY_VERSION =~ /2.0/)
+  gem.add_development_dependency 'yajl-ruby', '~> 1.1.0' unless (RUBY_PLATFORM == 'java') || (RUBY_VERSION =~ /2.0/)
   gem.add_development_dependency 'json_pure', '~> 1.7.4'
 
   gem.require_paths = ['lib']
