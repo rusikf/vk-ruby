@@ -14,7 +14,7 @@ class VK::Serverside
   def initialize(params = {})
     params.each{|k,v| instance_variable_set(:"@#{k}", v) }
 
-    raise 'undefined application id' unless self.app_id
+    raise 'undefined application id'     unless self.app_id
     raise 'undefined application secret' unless self.app_secret
 
     transform base_api, self.method(:vk_call)
