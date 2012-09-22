@@ -16,7 +16,6 @@ module VK
     attr_configurable :use_ssl, :verify, default: true
 
     attr_configurable :verb,            default: :post
-    attr_configurable :attempts,        default: 5
     attr_configurable :timeout,         default: 2
     attr_configurable :open_timeout,    default: 3
     attr_configurable :adapter,         default: Faraday.default_adapter
@@ -51,9 +50,9 @@ module VK
         faraday.request :url_encoded
 
         faraday.response :json, content_type: /\bjson$/
-        faraday.response :xml,  content_type: /\bxml$/
-        faraday.response :normalize_utf
-        faraday.response :validate_utf
+
+        # faraday.response :normalize_utf
+        # faraday.response :validate_utf
         # faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
@@ -63,9 +62,7 @@ module VK
     private
 
     def request(path, options = {})
-      attempts = options.delete(:attempts) || self.attempts
-
-      host =  options.delete(:host) || 'https://api.vk.com'
+      host = options.delete(:host) || 'https://api.vk.com'
       verb = (options.delete(:verb) || self.verb).downcase.to_sym
 
       options[:access_token] ||= self.access_token if host == 'https://api.vk.com'
@@ -83,6 +80,7 @@ module VK
       params = {}
 
       params[:timeout] = options.delete(:timeout) || self.timeout
+      params[:open_timeout] = options.delete(:open_timeout) || self.open_timeout
       params[:proxy]   = options.delete(:proxy)   || self.proxy
       params[:use_ssl] = options.delete(:use_ssl) || self.use_ssl
       params[:verify]  = options.delete(:verify)  || self.verify

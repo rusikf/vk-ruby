@@ -13,7 +13,7 @@ module Faraday
       end
     end
 
-    def_delegators :@logger, :debug, :debug?, :info, :warn, :error, :fatal
+    def_delegators :@logger, :debug, :debug?, :error?, :info, :warn, :error, :fatal
 
     def call(env)
       if debug?

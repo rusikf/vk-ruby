@@ -17,6 +17,6 @@ require 'rake/testtask'
 task default: :test
 
 Rake::TestTask.new do |test|
-  test.pattern = 'tests/benchmarks.rb'
+  test.pattern = 'tests/*_test.rb'
   test.verbose = true
 end
