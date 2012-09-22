@@ -32,7 +32,6 @@ photos:
   - editComment
   - deleteComment
   - restoreComment
-  - getAll
   - getUserPhotos
   - getTags
   - putTag
@@ -93,3 +92,19 @@ ads:
   - getUploadURL
   - getFloodStats
   - getRejectionReason
+fave:
+  - getUsersnew
+  - getPhotosnew
+  - getVideosnew
+  - getPostsnew
+  - getLinksnew
+auth:
+  - signupnew
+  - confirmnew
+  - checkPhone
+account:
+  - importContactsnew
+  - registerDevicenew
+  - unregisterDevicenew
+  - setSilenceModenew 
+  - setOnlinen
