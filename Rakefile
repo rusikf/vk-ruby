@@ -3,13 +3,13 @@
 require 'rubygems'
 require 'bundler'
 
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
+# begin
+#   Bundler.setup(:default, :development)
+# rescue Bundler::BundlerError => e
+#   $stderr.puts e.message
+#   $stderr.puts "Run `bundle install` to install missing gems"
+#   exit e.status_code
+# end
 
 require 'rake'
 require 'rake/testtask'
@@ -17,6 +17,6 @@ require 'rake/testtask'
 task default: :test
 
 Rake::TestTask.new do |test|
-  test.pattern = 'tests/*_test.rb'
+  test.pattern = 'tests/benchmarks.rb'
   test.verbose = true
 end

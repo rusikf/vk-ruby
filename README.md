@@ -1,4 +1,4 @@
-#VK-RUBY 
+#VK-RUBY
 [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
 
 Ruby wrapper for vk.com API.
@@ -23,7 +23,7 @@ app.audio.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize C
 ```
 
 ## Contributing to vk-ruby
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
@@ -34,4 +34,4 @@ app.audio.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize C
 
 ## Copyright
 
-Copyright (c) 2011 Andrew Zinenko. See LICENSE.txt for further details.
+Copyright (c) 2011-2012 Andrew Zinenko. See LICENSE.txt for further details.

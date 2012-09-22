@@ -39,6 +39,12 @@ module VK
       response.body['response']
     end
 
+    def in_parallel(manager = nil, &block)
+      Faraday.new(parallel_manager: manager) do
+        yield if block_given?
+      end
+    end
+
     def faraday_middleware
       @faraday_middleware || proc do |faraday|
         faraday.request :multipart
@@ -48,7 +54,7 @@ module VK
         faraday.response :xml,  content_type: /\bxml$/
         faraday.response :normalize_utf
         faraday.response :validate_utf
-        faraday.response :vk_logger, self.logger
+        # faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
       end
