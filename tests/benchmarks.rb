@@ -16,7 +16,7 @@ end
 class TestBench < MiniTest::Unit::TestCase
 
 	def self.bench_range
-		[50]
+		[20000]
 	end
 
 	def setup

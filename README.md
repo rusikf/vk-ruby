@@ -18,7 +18,7 @@ require 'vk-ruby'
 
 app = VK::Serverside.new app_id: APP_ID, app_secret: APP_SECRET
 
-app.audio.search(q: 'Sting').map{|track| puts track.inspect}  if app.authorize CODE
+app.audio.search(q: 'Sting').map{|track| puts track.inspect} if app.authorize CODE
 # => Sting tracks
 ```
 
