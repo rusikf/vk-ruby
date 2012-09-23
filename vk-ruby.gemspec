@@ -26,15 +26,15 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake',      '~> 0.9'
   gem.add_development_dependency 'minitest',  '~> 2.8'
   gem.add_development_dependency 'webmock',   '~> 1.0'
-  gem.add_development_dependency 'oj',        '~> 1.0.6' unless RUBY_PLATFORM == 'java'
-  gem.add_development_dependency 'yajl-ruby', '~> 1.1.0' unless RUBY_PLATFORM == 'java'
+  gem.add_development_dependency 'oj',        '~> 1.0.6'       unless RUBY_PLATFORM == 'java'
+  gem.add_development_dependency 'yajl-ruby', '~> 1.1.0'       unless RUBY_PLATFORM == 'java'
   gem.add_development_dependency 'json_pure', '~> 1.7.4'
   gem.add_development_dependency 'eventmachine',    '~> 1.0.0' unless RUBY_PLATFORM == 'java'
   gem.add_development_dependency 'em-synchrony',    '~> 1.0.2' unless RUBY_PLATFORM == 'java'
   gem.add_development_dependency 'em-http-request', '~> 1.0.3' unless RUBY_PLATFORM == 'java'
-  gem.add_development_dependency 'patron',    '~> 0.4.18' unless RUBY_PLATFORM == 'java'
-  gem.add_development_dependency 'typhoeus',  '~> 0.4.2'  unless RUBY_PLATFORM == 'java'
-  gem.add_development_dependency 'net-http-persistent', '2.7'
+  gem.add_development_dependency 'patron',    '~> 0.4.18'      unless RUBY_PLATFORM == 'java'
+  gem.add_development_dependency 'typhoeus',  '~> 0.4.2'       unless RUBY_PLATFORM == 'java'
+  gem.add_development_dependency 'net-http-persistent', '2.7'  unless RUBY_ENGINE == "rubinius"
 
   gem.require_paths = ['lib']
   gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
