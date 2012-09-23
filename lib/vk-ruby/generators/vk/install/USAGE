@@ -1,0 +1,5 @@
+Description:
+    rails generate vk:install
+
+    This will create:
+        config/initialize/vk-ruby.rb

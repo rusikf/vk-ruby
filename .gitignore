@@ -12,5 +12,6 @@ pkg
 \#*
 .\#*
 *.swp
+/example
 
 config.yml
