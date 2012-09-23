@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+# @author Andrew Zinenko
+
 require 'faraday'
 require 'faraday_middleware'
 require 'transformer'
@@ -7,7 +9,9 @@ require 'multi_json'
 require 'yaml'
 require 'cgi'
 require 'forwardable'
+require 'openssl'
 
+# Register multi_json parser.
 FaradayMiddleware::ParseJson.define_parser do |body|
   MultiJson.load(body)
 end

@@ -16,7 +16,7 @@ end
 class TestBench < MiniTest::Unit::TestCase
 
 	def self.bench_range
-		[1000]
+		[50]
 	end
 
 	def setup
@@ -39,7 +39,7 @@ class TestBench < MiniTest::Unit::TestCase
         @vk.adapter = http_adapter
         MultiJson.engine = json_engine
 
-        assert_performance_linear 0.998 do |n| # n is a range value
+        assert_performance_linear 0.9998 do |n| # n is a range value
           (1..n).each_slice( per_request ) do |part|
             @vk.users.get(uids: part.join(','), fields: @fields)
           end
@@ -59,7 +59,7 @@ class TestBench < MiniTest::Unit::TestCase
 
         results = []
 
-        assert_performance_linear 0.998 do |n|
+        assert_performance_linear 0.9998 do |n|
           (1..n).each_slice( per_request * part_size ) do |part|
             @vk.in_parallel do |r|
 

@@ -3,6 +3,35 @@
 module VK
   module Configurable
 
+    # Constant based configuration.
+    #
+    # @example
+    #          module Test
+    #            A = 'A'
+    #            B = 'B'
+    #            D = 'D'
+    #
+    #            class Application
+    #              extend VK::Configurable
+    #
+    #              C = 'C'
+    #
+    #              attr_configurable :a, :b
+    #              attr_configurable :c, :d,  default: :default_value
+    #
+    #              def initialize(params={})
+    #                params.each{|key, value| send("#{key}=", value) }
+    #              end
+    #            end
+    #          end
+    #
+    #          @application = Test::Application.new(a: 1, d: 2)
+    #          @application.a # => 1
+    #          @application.b # => 'B'
+    #          @application.c # => :default_value
+    #          @application.d # => 2
+    #
+
     def attr_configurable(*arr)
       params = arr.pop if arr.last.is_a?(Hash)
 
