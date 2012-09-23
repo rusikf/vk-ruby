@@ -24,14 +24,4 @@ class SecureServerTest < MiniTest::Unit::TestCase
     assert_equal @app.authorize , params.stringify
   end
 
-  def test_raises_initialize
-    assert_raises(RuntimeError) do
-      ::VK::Serverside.new {}
-    end
-
-    assert_raises(RuntimeError) do
-      ::VK::Serverside.new app_id: :test_id
-    end
-  end
-
 end

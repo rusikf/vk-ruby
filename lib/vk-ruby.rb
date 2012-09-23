@@ -18,4 +18,4 @@ end
 
 %w(validate_utf normalize_utf vk_logger).each{|lib| require "vk-ruby/middleware/response/#{lib}"}
 
-%w(configurable core secure serverside standalone vk_exception version).each{|lib| require "vk-ruby/#{lib}"}
+%w(configurable core upload secure serverside standalone vk_exception version).each{|lib| require "vk-ruby/#{lib}"}

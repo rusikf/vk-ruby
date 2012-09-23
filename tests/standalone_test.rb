@@ -89,9 +89,4 @@ class StandaloneTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_raises_initialize
-    assert_raises(RuntimeError){ ::VK::Serverside.new {} }
-    assert_raises(RuntimeError){ ::VK::Serverside.new app_id: :test_id }
-  end
-
 end

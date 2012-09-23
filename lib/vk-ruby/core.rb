@@ -20,18 +20,6 @@ module VK
     # @method logger
     attr_configurable :logger
 
-    # An ssl ca_path option that will be used to make each request.
-    # @method ca_path
-    attr_configurable :ca_path
-
-    # A ssl ca_file option that will be used to make each request.
-    # @method ca_file
-    attr_configurable :ca_file
-
-    # A ssl verify_mode option that will be used to make each request.
-    # @method verify_mode
-    attr_configurable :verify_mode
-
     # Proxy params that will be used to make each request.
     # @method proxy
     attr_configurable :proxy
@@ -41,10 +29,23 @@ module VK
     # @method use_ssl
     attr_configurable :use_ssl, default: true
 
-    # Param specifying the ssl verification strategy that you need to use ssl.
+    # Param indicating that you need to verify peer..
     # That will be used to make each request.
     # @method verify
-    attr_configurable :verify, default: ::OpenSSL::SSL::VERIFY_NONE
+    attr_configurable :verify, default: false
+
+    # Param specifying the ssl verification strategy that you need to use ssl.
+    # That will be used to make each request.
+    # @method verify_mode
+    attr_configurable :verify_mode, default: ::OpenSSL::SSL::VERIFY_NONE
+
+    # An ssl ca_path option that will be used to make each request.
+    # @method ca_path
+    attr_configurable :ca_path
+
+    # A ssl ca_file option that will be used to make each request.
+    # @method ca_file
+    attr_configurable :ca_file
 
     # Verb the HTTP method to used to make each request.
     # @method verb
@@ -106,10 +107,22 @@ module VK
     end
 
     # Calling API method.
-    # {http://vk.com/developers.php?oid=-1&p=%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%BE%D0%B2_%D0%BA_API}
+    # {http://vk.com/developers.php?oid=-1&p=%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%BE%D0%B2_%D0%BA_API Read more}
     #
     # @param [String] method_name A full name of the method.
-    # @param [Hash] params Method params.
+    # @param [Hash] params configurable options request. if you do not pass the option that will be used by the same name attribute.
+    # @option params [String] :host host request.
+    # @option params [String] :verb http verb request. Only `:get` or `:post`.
+    # @option params [String] :access_token your access token.
+    # @option params [String] :open_timeout  open_timeout request.
+    # @option params [String] :timeout timeout request.
+    # @option params [Hash] :proxy proxy params request.
+    # @option params [Boolean] :use_ssl indicating that you need to use ssl.
+    # @option params [Boolean] :verify indicating that you need to verify peer.
+    # @option params [String] :verify_mode specifying the ssl verification strategy that you need to use ssl.
+    # @option params [String] :ca_path ssl ca_path.
+    # @option params [String] :ca_file ssl ca_file.
+    # @option params [String] :other_options the other options are considered as api method parameters.
     #
     # @return [Hash|Array]
     #
@@ -155,7 +168,7 @@ module VK
 
     private
 
-     # @private
+    # @private
     def request(path, options = {})
       host = options.delete(:host) || 'https://api.vk.com'
       verb = (options.delete(:verb) || self.verb).downcase.to_sym
@@ -192,6 +205,8 @@ module VK
           params[:ssl][:ca_file] = _ca_file         if _ca_file
           params[:ssl][:verify_mode] = _verify_mode if _verify_mode
         end
+      else
+        params[:ssl] = false
       end
 
       if verb == :get
@@ -201,14 +216,6 @@ module VK
         params[:params] = {}
         return params, options
       end
-    end
-
-    # @private
-    def encode_params(params)
-      params.map do |key, value|
-        value = MultiJson.dump(value) unless value.is_a?(String) || value.is_a?(Symbol)
-        [CGI.escape(key.to_s), CGI.escape(value.to_s)].join('=')
-      end.join("&")
     end
 
   end
