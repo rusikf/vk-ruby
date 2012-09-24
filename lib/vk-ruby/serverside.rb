@@ -26,6 +26,10 @@ class VK::Serverside
   def initialize(params = {})
     params.each{|k,v| instance_variable_set(:"@#{k}", v) }
 
+    if (params[:underscore_methods] || self.underscore_methods)
+      self.method_name = proc{|name| underscore(name)}
+    end
+
     transform base_api, self.method(:vk_call)
   end
 

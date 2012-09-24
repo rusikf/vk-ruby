@@ -8,6 +8,8 @@ module VK
     # A customized stack of Faraday middleware that will be used to make each request.
     attr_accessor :faraday_middleware
 
+    attr_configurable :underscore_methods, default: false
+
     # Application ID that will be used to make each request.
     # @method app_id
     attr_configurable :app_id
@@ -213,6 +215,15 @@ module VK
         params[:params] = {}
         return params, options
       end
+    end
+
+    # @private
+    def underscore(str)
+      str.gsub(/::/, '/').
+      gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+      gsub(/([a-z\d])([A-Z])/,'\1_\2').
+      tr("-", "_").
+      downcase
     end
 
   end

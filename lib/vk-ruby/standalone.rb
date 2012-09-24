@@ -20,6 +20,10 @@ class VK::Standalone
   def initialize(params={})
     params.each{|k,v| instance_variable_set(:"@#{k}", v) }
 
+    if (params[:underscore_methods] || self.underscore_methods)
+      self.method_name = proc{|name| underscore(name)}
+    end
+
     transform base_api, self.method(:vk_call)
     transform ext_api,  self.method(:vk_call)
   end

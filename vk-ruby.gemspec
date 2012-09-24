@@ -16,7 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
 
-  gem.add_runtime_dependency 'transformer',        '~> 0.2.2'
+  gem.add_runtime_dependency 'transformer',        '~> 0.3.0'
   gem.add_runtime_dependency 'attr_configurable',  '~> 0.1.0'
   gem.add_runtime_dependency 'multi_json',         '~> 1.3.6'
   gem.add_runtime_dependency 'faraday',            '~> 0.8.4'
