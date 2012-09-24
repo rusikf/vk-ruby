@@ -23,7 +23,7 @@ app.audio.search q: 'Sting' # => Sting tracks
 
 # similar call
 
-app.vk_call 'audio.search", {q: 'Sting'}
+app.vk_call 'audio.search', {q: 'Sting'}
 ```
 
 ### Upload files
