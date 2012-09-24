@@ -132,7 +132,7 @@ $ vk --help
   -T, --types                      List application types
 
 $ vk -e 'puts vk.isAppUser'
-
+ 0
 $ vk -a 'your token'
 
 1.9.3p194 :001 > vk.access_token
