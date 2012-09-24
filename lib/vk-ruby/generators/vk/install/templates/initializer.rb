@@ -1,4 +1,5 @@
 module VK
+  # @private
   # APP_ID = 222
   # APP_SECRET = "foobar"
   # ACCESS_TOKEN = "your acceess token"

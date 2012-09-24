@@ -1,5 +1,6 @@
 # encoding: UTF-8
 
+# @title Ruby wrapper for vk.com API.
 # @author Andrew Zinenko
 
 require 'faraday'

@@ -6,7 +6,7 @@ module VK
   #
   # @option params [String] :url URL for the request.
   #
-  # @return [Hashie::Mash] The server response.
+  # @return [Hash] The server response.
   #
   # @raise [ArgumentError] raised when a `:url` parameter is omitted.
   #

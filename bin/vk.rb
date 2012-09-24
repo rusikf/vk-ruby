@@ -66,6 +66,7 @@ end
 _app_params = {}
 
 _app_params[:app_id] = __options__[:id] || ''
+_app_params[:access_token] = __options__[:access_token] || nil
 _app_params[:logger] = Logger.new(__options__[:logfile] || nil)
 _app_params[:app_secret] = __options__[:secret] || ''
 

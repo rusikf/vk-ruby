@@ -157,10 +157,7 @@ module VK
         faraday.request  :url_encoded
 
         faraday.response :json, content_type: /\bjson$/
-
-        # faraday.response :normalize_utf
-        # faraday.response :validate_utf
-        # faraday.response :vk_logger, self.logger
+        faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
       end
