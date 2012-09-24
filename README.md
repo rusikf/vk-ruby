@@ -61,6 +61,9 @@ __Not supported__
 
 ## Configuration
 
+Used to configure the gem [attr_configurable](https://github.com/zinenko/attr_configurable)
+The idea is the hierarchy of default parameters.
+
 __instance variable__ -> __class constant__ -> __module constant__
 
 ```.ruby
@@ -82,6 +85,20 @@ VK::Serverside.new(app_id: 333).app_id # => 333
 
 VK::Secure.new.app_id # => 111
 ```
+
+For configuration available this options:
+
+* __logger__ application logger.
+* __verb__ http verb request. Only `:get` or `:post`.
+* __access_token__ your access token.
+* __open_timeout__  open_timeout request.
+* __timeou__t timeout request.
+* __proxy__ proxy params request.
+* __use_ssl__ indicating that you need to use ssl.
+* __verify__ indicating that you need to verify peer.
+* __verify_mode__ specifying the ssl verification strategy that you need to use ssl.
+* __ca_path__ ssl ca_path.
+* __ca_file__ ssl ca_file.
 
 ### Middlewares stack
 
