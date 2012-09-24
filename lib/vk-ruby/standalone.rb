@@ -4,7 +4,7 @@ class VK::Standalone
   include VK::Core
   include Transformer
 
-  extend ::VK::Configurable
+  extend ::Configurable
 
   attr_accessor :expires_in
 

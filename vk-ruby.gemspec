@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
 
   gem.add_runtime_dependency 'transformer',        '~> 0.2.2'
+  gem.add_runtime_dependency 'attr_configurable',  '~> 0.1.0'
   gem.add_runtime_dependency 'multi_json',         '~> 1.3.6'
   gem.add_runtime_dependency 'faraday',            '~> 0.8.0'
   gem.add_runtime_dependency 'faraday_middleware', '~> 0.8.8'
@@ -37,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'net-http-persistent', '2.7'
 
   gem.require_paths = ['lib']
+  gem.executables << 'vk'
   gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
 
   gem.files = `git ls-files`.split("\n")

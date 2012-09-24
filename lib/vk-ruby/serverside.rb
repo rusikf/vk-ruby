@@ -4,7 +4,7 @@ class VK::Serverside
   include VK::Core
   include Transformer
 
-  extend ::VK::Configurable
+  extend ::Configurable
 
   # The duration of the token after authorization
   attr_accessor :expires_in

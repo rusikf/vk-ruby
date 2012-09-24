@@ -2,7 +2,7 @@
 
 module VK
   module Core
-    extend Configurable
+    extend ::Configurable
     extend Forwardable
 
     # A customized stack of Faraday middleware that will be used to make each request.

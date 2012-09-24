@@ -4,7 +4,7 @@ class VK::Secure
   include VK::Core
   include Transformer
 
-  extend ::VK::Configurable
+  extend ::Configurable
 
   # Application secret that will be used to make authorize request.
   # @method app_secret
