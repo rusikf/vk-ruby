@@ -9,7 +9,6 @@ Ruby wrapper for vk.com API. Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
 ```.bash
 
 gem install vk-ruby
-
 ```
 
 ## How to use
@@ -25,7 +24,6 @@ app.audio.search q: 'Sting' # => Sting tracks
 # similar call
 
 app.vk_call 'audio.search", {q: 'Sting'}
-
 ```
 
 ### Upload files
@@ -35,7 +33,6 @@ app.vk_call 'audio.search", {q: 'Sting'}
 url = 'http://cs2222.vkontakte.ru/upload.php?act=do_add'
 
 VK.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
-
 ```
 
 ### Authorization
@@ -47,7 +44,6 @@ VK.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 app = VK::Serverside.new app_id: 222, app_secret: 'secret key'
 
 app.authorize(CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
-
 ```
 
 #### Secure server
@@ -57,7 +53,6 @@ app.authorize(CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461a
 app = VK::Secure.new app_id: 222, app_secret: 'secret key'
 
 app.authorize # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3"}
-
 ```
 
 #### Standalone
@@ -86,7 +81,6 @@ VK::Serverside.new.app_id # => 222
 VK::Serverside.new(app_id: 333).app_id # => 333
 
 VK::Secure.new.app_id # => 111
-
 ```
 
 ### Middlewares stack
@@ -103,29 +97,23 @@ def faraday_middleware
     faraday.adapter  self.adapter
   end
 end
-
 ```
 
 #### Expanding stack
 
 ```.ruby
 
-app.faraday_middleware = proc do
+app.faraday_middleware = proc do |faraday|
+  faraday.request  :multipart
+  faraday.request  :url_encoded
 
-  @faraday_middleware || proc do |faraday|
-    faraday.request  :multipart
-    faraday.request  :url_encoded
+  faraday.response :json, content_type: /\bjson$/
+  faraday.response :normalize_utf
+  faraday.response :validate_utf
+  faraday.response :vk_logger, self.logger
 
-    faraday.response :json, content_type: /\bjson$/
-    faraday.response :normalize_utf
-    faraday.response :validate_utf
-    faraday.response :vk_logger, self.logger
-
-    faraday.adapter  app.adapter
-  end
-
+  faraday.adapter  app.adapter
 end
-
 ```
 
 ## IRB mode
