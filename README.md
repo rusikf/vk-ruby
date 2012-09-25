@@ -23,23 +23,10 @@ app.friends.getOnline uid: 1 # => Online friends
 
 # similar call
 
-app.vk_call 'friends.getOnline', {uid: 1}
-
-app = VK::Serverside.new access_token: TOKEN, underscore_methods: true
-
 app.friends.get_online uid: 1
-```
-
-### Underscore methods
-
-
-```.ruby
 
 app.vk_call 'friends.getOnline', {uid: 1}
 
-app = VK::Serverside.new access_token: TOKEN, underscore_methods: true
-
-app.friends.get_online uid: 1
 ```
 
 ### Upload files
@@ -48,7 +35,7 @@ app.friends.get_online uid: 1
 
 url = 'http://cs2222.vkontakte.ru/upload.php?act=do_add'
 
-VK.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
+app.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 ```
 
 ### Authorization
