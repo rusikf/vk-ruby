@@ -1,36 +1,11 @@
 # encoding: UTF-8
 
-class VK::Serverside
-  include VK::Core
-  include Transformer
-
-  extend ::Configurable
-
-  # The duration of the token after authorization
-  attr_accessor :expires_in
-
-  # Application ID that will be used to make authorize request.
-  # @method app_secret
-
-  attr_configurable :app_secret
-
-  # Application settings(scope) that will be used to make authorize request.
-  # Default `'notify,friends,offline'`
-  # @method settings
-  #
-  # {http://vk.com/developers.php?oid=-1&p=%D0%9F%D1%80%D0%B0%D0%B2%D0%B0_%D0%B4%D0%BE%D1%81%D1%82%D1%83%D0%BF%D0%B0_%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9 Read more.}
-
-  attr_configurable :settings, default: 'notify,friends,offline'
+class VK::Serverside < VK::Application
 
   # A new VK::Serverside application.
-  def initialize(params = {})
-    params.each{|k,v| instance_variable_set(:"@#{k}", v) }
-
-    if (params[:underscore_methods] || self.underscore_methods)
-      self.method_name = proc{|name| underscore(name)}
-    end
-
-    transform base_api, self.method(:vk_call)
+  def initialize(params={})
+    VK::Utils.deprecate "VK::Serverside is deprecate, please use VK::Application"
+    super params
   end
 
   # Authorization (getting the access token by code)

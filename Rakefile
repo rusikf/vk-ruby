@@ -14,9 +14,11 @@ end
 require 'rake'
 require 'rake/testtask'
 
-task default: :test
+# task default: :test
 
 Rake::TestTask.new do |test|
-  test.pattern = 'tests/*test.rb'
+  # include Rake::DSL
+
+  test.pattern = 'tests/*_test.rb'
   test.verbose = true
 end

@@ -1,0 +1,255 @@
+- isAppUser
+- getProfiles
+- getUserBalance
+- getUserSettings
+- getGroupsFull
+- getVariable
+- getVariables
+- putVariable
+- getHighScores
+- setUserScore
+- getMessages
+- sendMessage
+- getServerTime
+- getAds
+- setNameInMenu
+- resolveScreenName
+- execute
+- setSMSPrefix
+- getSMSPrefix
+- sendNotification
+- getAppBalance
+- getBalance
+- withdrawVotes
+- getTransactionsHistory
+- addRating
+- setCounter
+- getSMSHistory
+- sendSMSNotification
+- getSMS
+- setLanguageValue
+- deleteLanguageValue
+- saveAppStatus
+- getAppStatus
+- setSMSPrefix
+- getSMSPrefix
+-
+  friends:
+    - get
+    - getAppUsers
+    - getOnline
+    - getMutual
+  users:
+    - get
+  photos:
+    - getAlbums
+    - get
+    - getById
+    - getAll
+    - createAlbum
+    - editAlbum
+    - edit
+    - move
+    - makeCover
+    - reorderAlbums
+    - reorderPhotos
+    - getUploadServer
+    - save
+    - getProfileUploadServer
+    - saveProfilePhoto
+    - getWallUploadServer
+    - saveWallPhoto
+  wall:
+    - get
+    - getById
+    - savePost
+    - getPhotoUploadServer
+  audio:
+    - get
+    - audio
+    - getById
+    - getLyrics
+    - getUploadServer
+    - save
+    - search
+    - add
+    - delete
+    - edit
+    - restore
+    - reorder
+  video:
+    - get
+    - edit
+    - add
+    - delete
+    - search
+    - getUserVideos
+    - getComments
+    - createComment
+    - editComment
+    - deleteComment
+    - getTags
+    - putTag
+    - removeTag
+    - save
+  notes:
+    - get
+    - getById
+    - getFriendsNotes
+    - add
+    - edit
+    - delete
+    - getComments
+    - createComment
+    - editComment
+    - deleteComment
+    - restoreComment
+  pages:
+    - get
+    - save
+    - saveAccess
+    - getVersion
+    - getHistory
+    - getTitles
+  places:
+    - add
+    - getById
+    - search
+    - checkin
+    - getCheckins
+    - getTypes
+    - getCountries
+    - getCities
+    - getCountryById
+    - getCityById
+  storage:
+    - set
+    - get
+  groups:
+    - get
+    - getById
+    - isMember
+    - getMembers
+  board:
+    - getTopics
+    - deleteTopic
+    - getComments
+    - addComment
+    - editComment
+    - deleteComment
+    - restoreComment
+    - addTopic
+    - closeTopic
+    - fixTopic
+    - unfixTopic
+    - deleteTopic
+  messages:
+    - get
+    - getDialogs
+    - search
+    - send
+    - delete
+    - restore
+    - markAsNew
+    - markAsRead
+    - getHistory
+    - getLongPollServer
+  docs:
+    - get
+    - getById
+    - getUploadServer
+    - getWallUploadServer
+    - save
+  wall:
+    - post
+    - delete
+    - restore
+    - getComments
+    - addComment
+    - deleteComment
+    - restoreComment
+    - addLike
+    - deleteLike
+  photos:
+    - getComments
+    - getAllComments
+    - createComment
+    - editComment
+    - deleteComment
+    - restoreComment
+    - getUserPhotos
+    - getTags
+    - putTag
+    - removeTag
+  newsfeed:
+    - get
+    - getBanned
+    - addBan
+    - deleteBan
+  status:
+    - get
+    - set
+  likes:
+    - add
+    - delete
+    - getList
+    - isLiked
+  friends:
+    - getLists
+    - addList
+    - editList
+    - add
+    - delete
+    - getRequests
+  polls:
+    - getById
+    - addVote
+    - deleteVote
+  subscriptions:
+    - get
+    - getFollowers
+    - follow
+    - unfollow
+  ads:
+    - getAccounts
+    - getClients
+    - createClients
+    - updateClients
+    - deleteClients
+    - getCampaigns
+    - createCampaigns
+    - updateCampaigns
+    - deleteCampaigns
+    - getAds
+    - getAdsLayout
+    - getAdsTargeting
+    - createAds
+    - updateAds
+    - deleteAds
+    - getStatistics
+    - getDemographics
+    - getBudget
+    - getOfficeUsers
+    - addOfficeUsers
+    - removeOfficeUsers
+    - getTargetingStats
+    - getSuggestions
+    - getUploadURL
+    - getFloodStats
+    - getRejectionReason
+  fave:
+    - getUsersnew
+    - getPhotosnew
+    - getVideosnew
+    - getPostsnew
+    - getLinksnew
+  auth:
+    - signupnew
+    - confirmnew
+    - checkPhone
+  account:
+    - importContactsnew
+    - registerDevicenew
+    - unregisterDevicenew
+    - setSilenceModenew
+    - setOnlinen

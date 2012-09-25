@@ -1,25 +1,11 @@
 # encoding: UTF-8
 
-class VK::Secure
-  include VK::Core
-  include Transformer
-
-  extend ::Configurable
-
-  # Application secret that will be used to make authorize request.
-  # @method app_secret
-
-  attr_configurable :app_secret
+class VK::Secure < VK::Application
 
   # A new VK::Secure application.
-  def initialize(params = {})
-    params.each{|k,v| instance_variable_set(:"@#{k}", v)}
-
-    if (params[:underscore_methods] || self.underscore_methods)
-      self.method_name = proc{|name| underscore(name)}
-    end
-
-    transform secure_api, self.method(:vk_call)
+  def initialize(params={})
+    VK::Utils.deprecate "VK::Secure is deprecate, please use VK::Application"
+    super params
   end
 
   # Authorization (getting the access token by code)

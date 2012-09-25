@@ -60,17 +60,35 @@ class Hash
   end
 end
 
-def cycle(object, elements, &block)
+def api
+  @api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/api.yml" ))
+end
+
+def each_namespace(object, element, &block)
+  brute object, element do |obj, method_name, is_namespace|
+    block.call(obj, method_name) if is_namespace
+  end
+end
+
+def each_methods(object, element, &block)
+  brute object, element do |obj, method_name, is_namespace|
+    block.call(obj, method_name) unless is_namespace
+  end
+end
+
+def brute(object, elements, &block)
   case elements
     when String
-      block.call(object, elements, false)
+      block.call(object, elements.to_sym, false)
     when Array
-      elements.each {|element| cycle object, element, &block}
+      elements.each {|element| brute object, element, &block}
     else Hash
-      elements.each do |group_name, methods|
-        group = object.send(group_name.to_sym)
-        block.call(group, group_name, true)
-        cycle group, methods, &block
+      elements.each do |namespace_name, methods|
+        namespace = object.send(namespace_name.to_sym)
+
+        block.call(namespace, namespace_name.to_sym, true)
+
+        brute namespace, methods, &block
       end
     end
 end

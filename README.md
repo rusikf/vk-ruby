@@ -19,11 +19,27 @@ gem install vk-ruby
 
 app = VK::Serverside.new access_token: TOKEN
 
-app.audio.search q: 'Sting' # => Sting tracks
+app.friends.getOnline uid: 1 # => Online friends
 
 # similar call
 
-app.vk_call 'audio.search', {q: 'Sting'}
+app.vk_call 'friends.getOnline', {uid: 1}
+
+app = VK::Serverside.new access_token: TOKEN, underscore_methods: true
+
+app.friends.get_online uid: 1
+```
+
+### Underscore methods
+
+
+```.ruby
+
+app.vk_call 'friends.getOnline', {uid: 1}
+
+app = VK::Serverside.new access_token: TOKEN, underscore_methods: true
+
+app.friends.get_online uid: 1
 ```
 
 ### Upload files
@@ -92,7 +108,7 @@ For configuration available this options:
 * __verb__ http verb request. Only `:get` or `:post`.
 * __access_token__ your access token.
 * __open_timeout__  open_timeout request.
-* __timeou__t timeout request.
+* __timeout__ timeout request.
 * __proxy__ proxy params request.
 * __use_ssl__ indicating that you need to use ssl.
 * __verify__ indicating that you need to verify peer.
@@ -100,7 +116,13 @@ For configuration available this options:
 * __ca_path__ ssl ca_path.
 * __ca_file__ ssl ca_file.
 
-### Middlewares stack
+### Middlewares
+
+VK-RUBY based on [faraday](https://github.com/technoweenie/faraday).
+
+It is an HTTP client lib that provides a common interface over many adapters (such as Net::HTTP) and embraces the concept of Rack middleware when processing the request/response cycle.
+
+[Advanced middleware usage](https://github.com/technoweenie/faraday#advanced-middleware-usage).
 
 #### Default middlewares stack implementation
 
@@ -108,13 +130,20 @@ For configuration available this options:
 
 def faraday_middleware
   @faraday_middleware || proc do |faraday|
+    # request params encoders
     faraday.request  :multipart
     faraday.request  :url_encoded
+
+    # response body parse
     faraday.response :json, content_type: /\bjson$/
+
+    # http adapter
     faraday.adapter  self.adapter
   end
 end
 ```
+
+
 
 #### Expanding stack
 
@@ -149,9 +178,9 @@ $ vk --help
   -T, --types                      List application types
 
 $ vk -e 'puts vk.isAppUser'
- 0
-$ vk -a 'your token'
+0
 
+$ vk -a 'your token'
 1.9.3p194 :001 > vk.access_token
  => "your token"
 

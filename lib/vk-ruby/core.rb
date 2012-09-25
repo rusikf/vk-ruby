@@ -5,14 +5,56 @@ module VK
     extend ::Configurable
     extend Forwardable
 
-    # A customized stack of Faraday middleware that will be used to make each request.
-    attr_accessor :faraday_middleware
+    include VK::Namespace
 
-    attr_configurable :underscore_methods, default: false
+    # @private
+    NAMESPACES = [:users,
+                  :likes,
+                  :friends,
+                  :groups,
+                  :photos,
+                  :wall,
+                  :newsfeed,
+                  :notifications,
+                  :audio,
+                  :video,
+                  :docs,
+                  :places,
+                  :secure,
+                  :sms,
+                  :storage,
+                  :notes,
+                  :pages,
+                  :stats,
+                  :subscriptions,
+                  :widgets,
+                  :leads,
+                  :messages,
+                  :status,
+                  :polls,
+                  :account,
+                  :board,
+                  :fave,
+                  :auth,
+                  :ads,
+                  :orders]
 
     # Application ID that will be used to make each request.
     # @method app_id
     attr_configurable :app_id
+
+    # Application secret that will be used to make authorize request.
+    # @method app_secret
+
+    attr_configurable :app_secret
+
+    # Application settings(scope) that will be used to make authorize request.
+    # Default `'notify,friends,offline'`
+    # @method settings
+    #
+    # {http://vk.com/developers.php?oid=-1&p=%D0%9F%D1%80%D0%B0%D0%B2%D0%B0_%D0%B4%D0%BE%D1%81%D1%82%D1%83%D0%BF%D0%B0_%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9 Read more.}
+
+    attr_configurable :settings, default: 'notify,friends,offline'
 
     # An access token needed by authorized requests.
     # @method access_token
@@ -21,33 +63,18 @@ module VK
     # Application logger.
     # @method logger
     attr_configurable :logger
+    def_delegators :logger, :debug, :info, :warn, :error, :fatal, :level, :level=
 
     # Proxy params that will be used to make each request.
     # @method proxy
     attr_configurable :proxy
 
-    # Param indicating indicating that you need to use ssl.
-    # That will be used to make each request.
-    # @method use_ssl
-    attr_configurable :use_ssl, default: true
-
-    # Param indicating that you need to verify peer..
-    # That will be used to make each request.
-    # @method verify
-    attr_configurable :verify, default: false
-
-    # Param specifying the ssl verification strategy that you need to use ssl.
-    # That will be used to make each request.
-    # @method verify_mode
-    attr_configurable :verify_mode, default: ::OpenSSL::SSL::VERIFY_NONE
-
-    # An ssl ca_path option that will be used to make each request.
-    # @method ca_path
-    attr_configurable :ca_path
-
-    # A ssl ca_file option that will be used to make each request.
-    # @method ca_file
-    attr_configurable :ca_file
+    attr_configurable :ssl, default: {
+      verify: true,
+      verify_mode: ::OpenSSL::SSL::VERIFY_NONE#,
+      # ca_path:
+      # ca_file
+    }
 
     # Verb the HTTP method to used to make each request.
     # @method verb
@@ -74,38 +101,20 @@ module VK
     # @method adapter
     attr_configurable :adapter, default: Faraday.default_adapter
 
+    # A customized stack of Faraday middleware that will be used to make each request.
+    attr_configurable :faraday_middleware
 
     # Faraday parallel request manager.
     # That will be used to make each request.
     # @method parallel_manager
     attr_configurable :parallel_manager, default: Faraday::Adapter::EMHttp::Manager.new
 
-    # Base api methods.
-    # @method base_api
-    #
-    # @return [Hash] list of base api methods.
-
-    # Extended api methods (available only standalone application).
-    # @method ext_api
-    #
-    # @return [Hash] list of extended api methods.
-
-    # Secure api methods (available only secure server application).
-    # @method secure_api
-    #
-    # @return [Hash] list of secure api methods.
-
-    [:base, :ext, :secure].each do |name|
-      class_eval(<<-EVAL, __FILE__, __LINE__ + 1)
-        def #{name}_api
-          @@#{name}_api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/api/#{name}.yml" ))
-        end
-      EVAL
-    end
+    # The duration of the token after authorization
+    attr_accessor :expires_in
 
     # Is a your application instance authorized.
     def authorized?
-      !@access_token.nil?
+      !self.access_token.nil?
     end
 
     # Calling API method.
@@ -131,8 +140,8 @@ module VK
     # @raise an appropriate connection error if unable to make the request to vk.com.
     # @raise if vk.com return json with key error.
 
-    def vk_call(method_name, params)
-      response = request("/method/#{method_name}", ((params.is_a?(Array) ? params.shift : params) || {}))
+    def vk_call(method_name, params = {})
+      response = request("/method/#{method_name}", params || {})
 
       raise VK::ApiException.new(method_name, response.body) if response.body['error']
 
@@ -158,11 +167,40 @@ module VK
         faraday.request  :multipart
         faraday.request  :url_encoded
 
-        faraday.response :json, content_type: /\bjson$/
+        faraday.response :json,      content_type: /\bjson$/
         faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
       end
+    end
+
+    # Files uploading.
+    #
+    # @param [Hash] params A list of files to upload (also includes the upload URL). See example for the hash format.
+    #
+    # @option params [String] :url URL for the request.
+    #
+    # @return [Hash] The server response.
+    #
+    # @raise [ArgumentError] raised when a `:url` parameter is omitted.
+    #
+    # @example
+    #   your_application.upload(
+    #     url:   'http://example.com/upload',
+    #     file1: ['/path/to/file1.jpg', 'image/jpeg'],
+    #     file2: ['/path/to/file2.png', 'image/png']
+    #   )
+
+    def upload(params = {})
+      url = params.delete(:url)
+      raise ArgumentError, 'You should pass :url parameter' unless url
+
+      files = {}
+      params.each do |param_name, (file_path, file_type)|
+        files[param_name] = Faraday::UploadIO.new(file_path, file_type)
+      end
+
+      Faraday.new(&faraday_middleware).post(url, files)
     end
 
     private
@@ -172,7 +210,7 @@ module VK
       host = options.delete(:host) || 'https://api.vk.com'
       verb = (options.delete(:verb) || self.verb).downcase.to_sym
 
-      options[:access_token] ||= self.access_token if host == 'https://api.vk.com'
+      options[:access_token] ||= self.access_token if host == 'https://api.vk.com' && self.access_token
 
       params, body = http_params(verb, options)
 
@@ -189,24 +227,8 @@ module VK
 
       params[:open_timeout] = options.delete(:open_timeout) || self.open_timeout
       params[:timeout] = options.delete(:timeout) || self.timeout
-      params[:proxy]   = options.delete(:proxy)   || self.proxy
-      params[:use_ssl] = options.delete(:use_ssl) || self.use_ssl
-      params[:verify]  = options.delete(:verify)  || self.verify
-
-      if params[:use_ssl]
-        _ca_path = params.delete(:ca_path) || self.ca_path
-        _ca_file = params.delete(:ca_file) || self.ca_file
-        _verify_mode = params.delete(:verify_mode) || self.verify_mode
-
-        if _ca_path || _ca_file || _verify_mode
-          params[:ssl] = {}
-          params[:ssl][:ca_path] = _ca_path         if _ca_path
-          params[:ssl][:ca_file] = _ca_file         if _ca_file
-          params[:ssl][:verify_mode] = _verify_mode if _verify_mode
-        end
-      else
-        params[:ssl] = false
-      end
+      params[:proxy] = options.delete(:proxy) || self.proxy
+      params[:ssl] = options.delete(:ssl) || self.ssl
 
       if verb == :get
         params[:params] = options
@@ -215,15 +237,6 @@ module VK
         params[:params] = {}
         return params, options
       end
-    end
-
-    # @private
-    def underscore(str)
-      str.gsub(/::/, '/').
-      gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-      gsub(/([a-z\d])([A-Z])/,'\1_\2').
-      tr("-", "_").
-      downcase
     end
 
   end

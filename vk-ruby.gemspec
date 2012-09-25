@@ -14,8 +14,6 @@ Gem::Specification.new do |gem|
   gem.date = Time.now.strftime '%Y-%m-%d'
   gem.licenses = ["MIT"]
 
-  gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
-
   gem.add_runtime_dependency 'transformer',        '~> 0.3.0'
   gem.add_runtime_dependency 'attr_configurable',  '~> 0.1.0'
   gem.add_runtime_dependency 'multi_json',         '~> 1.3.6'
@@ -24,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'unicode_utils',      '~> 1.3.0'
   gem.add_runtime_dependency 'jruby-openssl',      '~> 0.7.7' if RUBY_PLATFORM == 'java'
 
-  gem.add_development_dependency 'rake',      '~> 0.9'
+  gem.add_development_dependency 'rake',      '~> 0.8.7'
   gem.add_development_dependency 'minitest',  '~> 2.8'
   gem.add_development_dependency 'webmock',   '~> 1.0'
   gem.add_development_dependency 'oj',        '~> 1.0.6'       unless RUBY_PLATFORM == 'java'
@@ -38,9 +36,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'net-http-persistent', '2.7'
 
   gem.require_paths = ['lib']
-  gem.executables << 'vk'
-  gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
-
   gem.files = `git ls-files`.split("\n")
   gem.test_files = `git ls-files -- tests/*`.split("\n")
+  gem.executables << 'vk'
+  gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
+  gem.required_rubygems_version = Gem::Requirement.new('>= 1.3.6')
 end
