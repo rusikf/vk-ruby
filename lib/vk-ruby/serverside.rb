@@ -18,7 +18,7 @@ class VK::Serverside < VK::Application
   # @raise if app_secret attribute is nil.
   # @raise [VK::AuthorizeException] if vk.com return json with key error.
 
-  def authorize(code, auto_save = true)
+  def authorize(code, _redirect_uri,  auto_save = true)
     raise 'undefined application id'     unless self.app_id
     raise 'undefined application secret' unless self.app_secret
 
@@ -26,6 +26,7 @@ class VK::Serverside < VK::Application
               client_id: self.app_id,
               client_secret: self.app_secret,
               code: code,
+              redirect_uri: (_redirect_uri || self.redirect_url),
               verb: :get}
 
     response = request("/access_token", params)

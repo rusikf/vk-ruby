@@ -29,7 +29,7 @@ class ApplicationTest < MiniTest::Unit::TestCase
   def test_authorization
     params = {client_id: :test_id ,client_secret: :test_secret}
     assert_equal @app.authorize(params.merge type: :secure) , {"client_id"=>"test_id", "client_secret"=>"test_secret", "grant_type"=>"client_credentials"}
-    assert_equal @app.authorize(params.merge type: :serverside, code: :test_code) ,{"client_id"=>"test_id", "client_secret"=>"test_secret", "code"=>"test_code"}
+    assert_equal @app.authorize(params.merge type: :serverside, code: :test_code, redirect_uri: '--') ,{"client_id"=>"test_id", "client_secret"=>"test_secret", "code"=>"test_code", "redirect_uri" => '--'}
   end
 
   def test_bad_requests

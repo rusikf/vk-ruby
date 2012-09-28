@@ -47,6 +47,8 @@ module VK
 
     attr_configurable :app_secret
 
+    attr_configurable :redirect_uri
+
     # Application settings(scope) that will be used to make authorize request.
     # Default `'notify,friends,offline'`
     # @method settings
@@ -226,6 +228,7 @@ module VK
         client_id: self.app_id,
         client_secret: self.app_secret,
         code: params[:code],
+        redirect_uri: (params[:redirect_uri] || self.redirect_url),
         verb: :get}
       when :secure
         {host: 'https://oauth.vk.com',

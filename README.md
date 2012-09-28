@@ -88,7 +88,7 @@ more details refer to the [documentation](http://vk.com/developers.php?oid=-1&p=
 
 ```.ruby
 
-app = VK::Application.new app_id: 222, app_secret: 'secret key'
+app = VK::Application.new app_id: 222, app_secret: 'secret key', redirect_uri: 'http://...'
 
 app.authorize(type: :serverside, code: CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
 
