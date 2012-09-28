@@ -1,8 +1,15 @@
-#VK-RUBY [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
+#VK-RUBY [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby) [documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
 
-Ruby wrapper for vk.com API. Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
+Ruby wrapper for vk.com API.
 
-[documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
+__VK-RUBY__ gives you full access to all features api.
+Has several types of method naming and methods calling, optional authorization, files uploading, logging, irb integration, parallel method calling and any faraday-supported http adapter of your choice.
+
+Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
+
+What do I need to start working with vk.com API?
+first of all, to register their own application and obtain the keys;
+familiar with how the authorization applications in contact;
 
 ## Installation
 
@@ -29,6 +36,26 @@ app.vk_call 'friends.getOnline', {uid: 1}
 
 ```
 
+### Parallel method call
+
+```.ruby
+
+app = VK::Application.new access_token: TOKEN
+
+app.adapter = :em_http # :em_synchrony or :patron or :typhoeus
+
+results = []
+
+app.in_parallel do
+  10.times do |i|
+    results << app.friends.get_online uid: i
+  end
+end
+
+result.size # => 10
+
+```
+
 ### Upload files
 
 Uploading files to vk servers performed in 3 steps:
@@ -51,7 +78,8 @@ app.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 
 ### Authorization
 
-
+[VK](vk.com) has several types of applications and several types of authorization. They are different ways of authorization and access rights.
+more details refer to the [documentation](http://vk.com/developers.php?oid=-1&p=%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F)
 
 #### Application
 
@@ -166,7 +194,6 @@ def faraday_middleware
 end
 ```
 
-
 #### Expanding stack
 
 ```.ruby
@@ -176,13 +203,15 @@ app.faraday_middleware = proc do |faraday|
   faraday.request  :url_encoded
 
   faraday.response :json, content_type: /\bjson$/
-  faraday.response :normalize_utf
-  faraday.response :validate_utf
+  faraday.response :normalize_utf     # UTF nfkd normalization
+  faraday.response :validate_utf      # Remove invalid utf
   faraday.response :vk_logger, self.logger
 
   faraday.adapter  app.adapter
 end
 ```
+
+Read more [Middleware usage](https://github.com/technoweenie/faraday#advanced-middleware-usage)
 
 ## IRB mode
 
@@ -203,8 +232,8 @@ $ vk -e 'puts vk.isAppUser'
 0
 
 $ vk -a 'your token'
-1.9.3p194 :001 > vk.access_token
- => "your token"
+001 > vk.access_token
+002 > => "your token"
 
 ```
 
