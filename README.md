@@ -31,6 +31,17 @@ app.vk_call 'friends.getOnline', {uid: 1}
 
 ### Upload files
 
+Uploading files to the server vk is in 3 stages:
+
+1. Getting url to download the file
+2. File download
+3. Save the file
+
+The first and third stages are produced by calls to certain API methods as described above.
+Details downloading files, see the [relevant section of the documentation](http://vk.com/developers.php?oid=-1&p=%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81_%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8_%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2_%D0%BD%D0%B0_%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80_%D0%92%D0%9A%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D0%B5).
+
+When you call the upload also need to specify the mime type file.
+
 ```.ruby
 
 url = 'http://cs2222.vkontakte.ru/upload.php?act=do_add'
@@ -97,11 +108,9 @@ For configuration available this options:
 * __open_timeout__  open_timeout request.
 * __timeout__ timeout request.
 * __proxy__ proxy params request.
-* __use_ssl__ indicating that you need to use ssl.
-* __verify__ indicating that you need to verify peer.
-* __verify_mode__ specifying the ssl verification strategy that you need to use ssl.
-* __ca_path__ ssl ca_path.
-* __ca_file__ ssl ca_file.
+* __ssl__ indicating that you need to use ssl.
+
+More information on configuring ssl documentation [faraday](https://github.com/technoweenie/faraday/wiki/Setting-up-SSL-certificates)
 
 ### Middlewares
 
