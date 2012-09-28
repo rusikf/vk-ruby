@@ -8,7 +8,7 @@ Has several types of method naming and methods calling, optional authorization, 
 
 Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
 
-To get started working with vk.com API?
+To get started working with vk.com API.
 First of all, to [register](http://vk.com/editapp?act=create) your own application and obtain the keys.
 Read [vk api documentation](http://vk.com/developers.php).
 
