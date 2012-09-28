@@ -31,11 +31,11 @@ app.vk_call 'friends.getOnline', {uid: 1}
 
 ### Upload files
 
-Uploading files to the server vk performed in 3 steps:
+Uploading files to vk servers performed in 3 steps:
 
-1. Getting url to download the file
-2. File download
-3. Save the file
+1. Getting url to download the file.
+2. File download.
+3. Save the file.
 
 The first and third steps are produced by calls to certain API methods as described above.
 Details downloading files, see the [relevant section of the documentation](http://vk.com/developers.php?oid=-1&p=%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D1%81%D1%81_%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8_%D1%84%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2_%D0%BD%D0%B0_%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80_%D0%92%D0%9A%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D0%B5).
@@ -51,7 +51,23 @@ app.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 
 ### Authorization
 
-#### Serverside
+
+
+#### Application
+
+```.ruby
+
+app = VK::Application.new app_id: 222, app_secret: 'secret key'
+
+app.authorize(type: :serverside, code: CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
+
+# if app is secure application server
+
+app.authorize(type: :secure) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3"}
+
+```
+
+#### Serverside(deprecated)
 
 ```.ruby
 
@@ -60,7 +76,11 @@ app = VK::Serverside.new app_id: 222, app_secret: 'secret key'
 app.authorize(CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
 ```
 
-#### Secure server
+Class VK::Serverside is deprecate. Please use VK::Application
+
+
+#### Secure server(deprecated)
+
 
 ```.ruby
 
@@ -69,9 +89,16 @@ app = VK::Secure.new app_id: 222, app_secret: 'secret key'
 app.authorize # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3"}
 ```
 
+Class VK::Secure is deprecate. Please use VK::Application
+
+
 #### Standalone
 
+
 __Not supported__
+
+Class VK::Standalone is deprecate. Please use VK::Application
+
 
 ## Configuration
 
@@ -85,7 +112,7 @@ __instance variable__ -> __class constant__ -> __module constant__
 module VK
   APP_ID = 111
 
-  class Serverside
+  class Application
     APP_ID = 222
   end
 
@@ -93,9 +120,9 @@ module VK
   end
 end
 
-VK::Serverside.new.app_id # => 222
+VK::Application.new.app_id # => 222
 
-VK::Serverside.new(app_id: 333).app_id # => 333
+VK::Application.new(app_id: 333).app_id # => 333
 
 VK::Secure.new.app_id # => 111
 ```
@@ -114,7 +141,7 @@ More information on configuring ssl documentation [faraday](https://github.com/t
 
 ### Middlewares
 
-VK-RUBY based on [faraday](https://github.com/technoweenie/faraday).
+__VK-RUBY__ based on [faraday](https://github.com/technoweenie/faraday).
 
 It is an HTTP client lib that provides a common interface over many adapters (such as Net::HTTP) and embraces the concept of Rack middleware when processing the request/response cycle.
 
@@ -138,7 +165,6 @@ def faraday_middleware
   end
 end
 ```
-
 
 
 #### Expanding stack

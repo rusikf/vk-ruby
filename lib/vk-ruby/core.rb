@@ -21,7 +21,6 @@ module VK
                   :docs,
                   :places,
                   :secure,
-                  :sms,
                   :storage,
                   :notes,
                   :pages,
