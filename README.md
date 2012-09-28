@@ -1,4 +1,5 @@
-#VK-RUBY [![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby) [documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
+#VK-RUBY
+[![Build Status](https://secure.travis-ci.org/zinenko/vk-ruby.png)](http://travis-ci.org/zinenko/vk-ruby)
 
 Ruby wrapper for vk.com API.
 
@@ -8,8 +9,10 @@ Has several types of method naming and methods calling, optional authorization, 
 Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
 
 What do I need to start working with vk.com API?
-first of all, to register their own application and obtain the keys;
-familiar with how the authorization applications in contact;
+First of all, to [register](http://vk.com/editapp?act=create) their own application and obtain the keys;
+And read [vk api documentation](http://vk.com/developers.php).
+
+[vk-ruby documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
 
 ## Installation
 
