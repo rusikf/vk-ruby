@@ -3,14 +3,14 @@
 
 Ruby wrapper for vk.com API.
 
-__VK-RUBY__ gives you full access to all features api.
-Has several types of method naming and methods calling, optional authorization, files uploading, logging, irb integration, parallel method calling and any faraday-supported http adapter of your choice.
+__VK-RUBY__ gives you full access to all API features.
+Has several types of method naming and methods calling, optional authorization, file uploading, logging, irb integration, parallel method calling and any faraday-supported http adapter of your choice.
 
 Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
 
-What do I need to start working with vk.com API?
-First of all, to [register](http://vk.com/editapp?act=create) their own application and obtain the keys.
-And read [vk api documentation](http://vk.com/developers.php).
+To get started working with vk.com API?
+First of all, to [register](http://vk.com/editapp?act=create) your own application and obtain the keys.
+Read [vk api documentation](http://vk.com/developers.php).
 
 [vk-ruby documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
 
