@@ -66,7 +66,6 @@
     - getPhotoUploadServer
   audio:
     - get
-    - audio
     - getById
     - getLyrics
     - getUploadServer
@@ -147,7 +146,6 @@
     - get
     - getDialogs
     - search
-    - send
     - delete
     - restore
     - markAsNew

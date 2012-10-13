@@ -7,37 +7,6 @@ module VK
 
     include VK::Namespace
 
-    # @private
-    NAMESPACES = [:users,
-                  :likes,
-                  :friends,
-                  :groups,
-                  :photos,
-                  :wall,
-                  :newsfeed,
-                  :notifications,
-                  :audio,
-                  :video,
-                  :docs,
-                  :places,
-                  :secure,
-                  :storage,
-                  :notes,
-                  :pages,
-                  :stats,
-                  :subscriptions,
-                  :widgets,
-                  :leads,
-                  :messages,
-                  :status,
-                  :polls,
-                  :account,
-                  :board,
-                  :fave,
-                  :auth,
-                  :ads,
-                  :orders]
-
     # Application ID that will be used to make each request.
     # @method app_id
     attr_configurable :app_id
@@ -64,6 +33,7 @@ module VK
     # Application logger.
     # @method logger
     attr_configurable :logger
+    
     def_delegators :logger, :debug, :info, :warn, :error, :fatal, :level, :level=
 
     # Proxy params that will be used to make each request.
@@ -169,7 +139,7 @@ module VK
         faraday.request  :url_encoded
 
         faraday.response :json,      content_type: /\bjson$/
-        faraday.response :vk_logger, self.logger
+        # faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
       end

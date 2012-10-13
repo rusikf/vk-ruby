@@ -64,33 +64,31 @@ def api
   @api ||= YAML.load_file( File.expand_path( File.dirname(__FILE__) + "/api.yml" ))
 end
 
-def each_namespace(object, element, &block)
-  brute object, element do |obj, method_name, is_namespace|
-    block.call(obj, method_name) if is_namespace
-  end
+def api_namespaces
+  api.select { |e| e.is_a? Hash }
 end
 
-def each_methods(object, element, &block)
-  brute object, element do |obj, method_name, is_namespace|
-    block.call(obj, method_name) unless is_namespace
-  end
-end
-
-def brute(object, elements, &block)
-  case elements
+def api_methods
+  api.map do |element|
+    case element
     when String
-      block.call(object, elements.to_sym, false)
-    when Array
-      elements.each {|element| brute object, element, &block}
-    else Hash
-      elements.each do |namespace_name, methods|
-        namespace = object.send(namespace_name.to_sym)
-
-        block.call(namespace, namespace_name.to_sym, true)
-
-        brute namespace, methods, &block
+      element
+    when Hash
+      element.map do |namespace, methods|
+        methods.map {|method_name| [namespace, method_name].join('.') }
       end
     end
+  end.flatten
+end
+
+def each_namespace
+  api_namespaces.each do |namespace|
+    namespace.keys.each { |namespace| yield namespace.to_sym if block_given? }
+  end
+end
+
+def each_methods
+  api_methods.each {|api_method| yield api_method.to_sym if block_given? }
 end
 
 def random_params(count = 3)

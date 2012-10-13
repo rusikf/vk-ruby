@@ -1,28 +1,31 @@
 require File.expand_path('../helpers', __FILE__)
 
 class ApplicationTest < MiniTest::Unit::TestCase
+
   def setup
-    @app = ::VK::Application.new app_id: :test_id, app_secret: :test_secret, access_token: :test_token
+    @app ||= ::VK::Application.new app_id: :test_id, app_secret: :test_secret, access_token: :test_token
     create_stubs!
   end
 
   def test_namespaces
-    each_namespace @app, api do |object, namespace|
+    each_namespace do |namespace_name|
+      object = @app.send namespace_name.to_sym
+
       assert_kind_of ::VK::Namespace, object
-      assert_equal object.namespace, namespace
+      assert_equal object.namespace, namespace_name
     end
   end
 
-  def test_post_request_params
-    each_methods @app, api do |obj, method_name|
-      unless method_name == :send
-        params = random_params.merge!(access_token: :test_token)
-        # # POST request
-        assert_equal obj.send(method_name, params), params.stringify
-        # # GET request
-        params.merge(verb: :get)
-        assert_equal obj.send(method_name, params), params.stringify
-      end
+  def test_requests
+    each_methods do |method_name|
+      params = random_params.merge!(access_token: :test_token)
+
+      # # POST request
+      assert_equal eval("@app.#{method_name}(params)"), params.stringify
+      
+      # # GET request
+      params.merge(verb: :get)
+      assert_equal eval("@app.#{method_name}(params)"), params.stringify
     end
   end
 
