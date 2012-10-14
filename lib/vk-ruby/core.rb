@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require 'openssl'
+
 module VK
   module Core
     extend ::Configurable
@@ -111,10 +113,11 @@ module VK
     # @raise an appropriate connection error if unable to make the request to vk.com.
     # @raise if vk.com return json with key error.
 
-    def vk_call(method_name, params = {})
-      response = request("/method/#{method_name}", params || {})
+    def vk_call(method_name, params)
+      params ||= {}
+      params[:access_token] ||= self.access_token if self.access_token
 
-      raise VK::ApiException.new(method_name, response.body) if response.body['error']
+      response = request("/method/#{method_name}", params)
 
       response.body['response']
     end
@@ -138,8 +141,10 @@ module VK
         faraday.request  :multipart
         faraday.request  :url_encoded
 
-        faraday.response :json,      content_type: /\bjson$/
-        # faraday.response :vk_logger, self.logger
+        faraday.response :api_errors
+        faraday.response :json, content_type: /\bjson$/
+        faraday.response :http_errors
+        faraday.response :vk_logger, self.logger
 
         faraday.adapter  self.adapter
       end
@@ -186,33 +191,35 @@ module VK
     # @raise [VK::AuthorizeException] if vk.com return json with key error.
 
     def authorize(params = {})
-      raise 'undefined application id'     unless self.app_id
-      raise 'undefined application secret' unless self.app_secret
+      fail ArgumentError, 'You should pass :app_id parameter'     unless self.app_id
+      fail ArgumentError, 'You should pass :app_secret parameter' unless self.app_secret
 
-      params[:save].nil? ? (params[:save] = true) : (params[:save] = false)
+      params[:save] ||= true
       params[:type] ||= :serverside
 
       options = case params[:type]
-      when :serverside
-        {host: 'https://oauth.vk.com',
-        client_id: self.app_id,
-        client_secret: self.app_secret,
-        code: params[:code],
-        redirect_uri: (params[:redirect_uri] || self.redirect_url),
-        verb: :get}
-      when :secure
-        {host: 'https://oauth.vk.com',
-        client_id: self.app_id,
-        client_secret: self.app_secret,
-        grant_type: :client_credentials,
-        verb: :get}
-      end
+                when :serverside
+                  {host: 'https://oauth.vk.com',
+                  client_id: self.app_id,
+                  client_secret: self.app_secret,
+                  code: params[:code],
+                  redirect_uri: (params[:redirect_uri] || self.redirect_url),
+                  verb: :get}
+                when :secure
+                  {host: 'https://oauth.vk.com',
+                  client_id: self.app_id,
+                  client_secret: self.app_secret,
+                  grant_type: :client_credentials,
+                  verb: :get}
+                end
 
       response = request("/access_token", options)
 
-      raise VK::AuthorizeException.new(response) if response.body['error']
-
-      response.body.each{|k,v| instance_variable_set(:"@#{k}", v) } if params[:save]
+      if params[:save]
+        response.body.each do |k,v|
+          instance_variable_set("@#{k}", v) if respond_to?(k)
+        end
+      end
 
       response.body
     end
@@ -222,17 +229,11 @@ module VK
     # @private
     def request(path, options = {})
       host = options.delete(:host) || 'https://api.vk.com'
-      verb = (options.delete(:verb) || self.verb).downcase.to_sym
-
-      options[:access_token] ||= self.access_token if host == 'https://api.vk.com' && self.access_token
+      verb = options.delete(:verb) || self.verb
 
       params, body = http_params(verb, options)
 
-      response = Faraday.new(host, params, &faraday_middleware).send(verb, path, body)
-
-      raise VK::BadResponseException.new(response, verb, path, options) if response.status.to_i != 200
-
-      response
+      Faraday.new(host, params, &faraday_middleware).send(verb, path, body)
     end
 
     # @private

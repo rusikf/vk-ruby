@@ -7,35 +7,60 @@ include WebMock::API
 
 if File.exists?("#{Dir.pwd}/config.yml")
   YAML.load_file("#{Dir.pwd}/config.yml").each do |name, value|
-    self.class.const_set name.upcase, value
+    self.class.const_set(name.upcase, value)
   end
 end
 
-def create_stubs!
+def stubs_get!
   stub_request(:get, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
     {
       body: MultiJson.dump('response' => URI.parse(request.uri).query.to_params),
       headers: {"Content-Type" => 'application/json'}
     }
   })
+end
 
+def stubs_post!
   stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
-
-    body = request.body.to_params
-    status = body.has_key?('http_error') ? 500 : 200
-
-    response = body.has_key?('error') ? {'error' => {}} : {'response' => body}
-
     {
-      body: MultiJson.dump(response),
-      headers: {"Content-Type" => 'application/json'},
-      status: status
+      body: MultiJson.dump('response' => request.body.to_params),
+      headers: {"Content-Type" => 'application/json'}
     }
   })
+end
 
+def stubs_http_error!
+  stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
+    {
+      body: MultiJson.dump('response' => request.body.to_params),
+      headers: {"Content-Type" => 'application/json'},
+      status: 500
+    }
+  })
+end
+
+def stubs_api_error!
+  stub_request(:post, /https:\/\/api.vk.com\/method/).to_return(lambda { |request|
+    {
+      body: MultiJson.dump('error' => {'error_code' => 'code', 'error_msg' => 'message'}),
+      headers: {"Content-Type" => 'application/json'}
+    }
+  })
+end
+
+def stubs_auth!
   stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request|
     {
       body: MultiJson.dump(URI.parse(request.uri).query.to_params),
+      headers: {"Content-Type" => 'application/json'}
+    }
+  })
+end
+
+def stubs_auth_error!
+  stub_request(:get, /https:\/\/oauth.vk.com\/access_token/).to_return(lambda { |request|
+    {
+      body: MultiJson.dump('error' => 'message', 'error_description' => 'discription'),
       headers: {"Content-Type" => 'application/json'}
     }
   })

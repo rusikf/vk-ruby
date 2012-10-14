@@ -32,7 +32,7 @@ class VK::Serverside < VK::Application
 
     response = request("/access_token", params)
 
-    raise VK::AuthorizeException.new(response) if response.body['error']
+    fail VK::AuthorizeException.new(response) if response.body['error']
 
     response.body.each{|k,v| instance_variable_set(:"@#{k}", v) } if auto_save
 

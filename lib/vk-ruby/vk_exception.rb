@@ -2,33 +2,51 @@
 
 module VK
 
-  class ApiException < Exception
-    attr_reader :vk_method, :error_code, :error_msg
+  class Error < StandardError
+  end
+
+  class ApiException < Error
+
+    attr_reader :vk_method, :code, :discription
 
     def initialize(api_method, error_hash)
-      @vk_method, @error_code = api_method, error_hash['error']['error_code'].to_i
-      @error_msg = "Error #{@error_code} in #{@vk_method} - #{error_hash['error']['error_msg']}"
-      super @error_msg
+      @vk_method = api_method
+      @code = error_hash['error']['error_code'].to_i
+      @discription = error_hash['error']['error_msg']
+    end
+
+    def to_s
+      "Error #@code in #@vk_method : #@discription"
     end
   end
 
-  class AuthorizeException < Exception
-    attr_reader :error, :error_msg
+  class AuthorizeException < Error
+
+    attr_reader :error, :description
 
     def initialize(error_hash)
-      @error, @error_msg = error_hash['error'], "Error #{@error} - #{error_hash['error_description']}"
-      super @error_msg
+      @error = error_hash['error']
+      @description = error_hash['error_description']
+    end
+
+    def to_s
+      "Error #@error : #@description"
     end
   end
 
-  class BadResponseException < Exception
-    attr_reader :response, :params
+  class BadResponseException < Error
 
-    def initialize(response, verbs, path, options)
-      @response, @params = response, params
-      @error_msg = "Bad response"
-      super @error_msg
+    attr_reader :response
+
+    def initialize(response)
+      @response = response
+      super
     end
+
+    def to_s
+      "Bad response (#{ response.status })"
+    end
+
   end
 
 end

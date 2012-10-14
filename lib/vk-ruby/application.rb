@@ -7,9 +7,9 @@ class VK::Application
   # The duration of the token after authorization
   attr_accessor :expires_in
 
-  # A new VK::Application instan.
+  # A new VK::Application instance.
   def initialize(params = {})
-    params.each{|k,v| instance_variable_set(:"@#{k}", v) }
+    params.each { |k,v| send("#{k}=", v) }
   end
 
 end

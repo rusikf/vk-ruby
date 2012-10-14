@@ -1,20 +1,21 @@
-require "unicode_utils"
+# encoding: UTF-8 
 
-module Faraday
-  class Response::NormalizeUtf < Response::Middleware
+class VK::MW::Response::NormalizeUtf < Faraday::Response::Middleware
 
-    def initialize(app)
-      super(app)
-    end
+  dependency 'unicode_utils'
 
-    def call(environment)
-      @app.call(environment).on_complete do |env|
-        env[:body] = UnicodeUtils.nfkd(env[:body])
-        env
-      end
-    end
+  attr_accessor :ntype
 
+  def initialize(app, t = :nfkd)
+    self.ntype = t
+    super(app)
   end
-end
 
-Faraday.register_middleware :response, normalize_utf: Faraday::Response::NormalizeUtf
+  def call(environment)
+    @app.call(environment).on_complete do |env|
+      env[:body] = UnicodeUtils.send(ntype, env[:body])
+      env
+    end
+  end
+
+end
