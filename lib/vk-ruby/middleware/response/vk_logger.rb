@@ -11,7 +11,7 @@ class  VK::MW::Response::VkLogger < Faraday::Response::Middleware
   def initialize(app, logger = nil)
     super(app)
 
-    @logger = !logger.nil? || begin
+    @logger = logger || begin
       require 'logger'
       ::Logger.new(STDOUT)
     end
