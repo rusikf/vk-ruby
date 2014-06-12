@@ -1,12 +1,15 @@
-# encoding: UTF-8
+module VK::Utils
 
-module VK
-  module Utils
+  # camelize('get_profiles')
+  # => 'getProfiles'
 
-    # Prints a deprecation message.
-    def self.deprecate(message)
-      Kernel.warn "VK-RUBY: Deprecation warning: " + message
-    end
+  def self.camelize(name)
+    words = name.to_s.split('_')
+    first_word = words.shift
 
+    words.each{|word| word.sub! /^[a-z]/, &:upcase }
+
+    words.unshift(first_word).join
   end
+  
 end

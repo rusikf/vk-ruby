@@ -252,4 +252,4 @@ $ vk -a 'your token'
 
 ## Copyright
 
-Copyright (c) 2011 [Andrew Zinenko](http://izinenko.ru). See LICENSE.txt for further details.
+Copyright (c) 2014 [Andrew Zinenko](http://izinenko.ru). See LICENSE.txt for further details.

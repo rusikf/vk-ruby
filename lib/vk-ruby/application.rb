@@ -2,14 +2,21 @@
 
 class VK::Application
   include VK::Core
-  extend ::Configurable
-
-  # The duration of the token after authorization
-  attr_accessor :expires_in
+  include VK::Auth
+  include VK::Uploading
+  include VK::Namespaces
 
   # A new VK::Application instance.
   def initialize(params = {})
-    params.each { |k,v| send("#{k}=", v) }
+    config.merge! params
+    yield(self) if block_given?
+  end
+
+  YAML.load_file(File.expand_path('../namespaces.yml', __FILE__)).each do |namespace|
+    define_method namespace do
+      instance_variable_get("@#{ namespace }") ||
+      instance_variable_set("@#{ namespace }", VK::Methods.new(namespace, handler))
+    end
   end
 
 end
