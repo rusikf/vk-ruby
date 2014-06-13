@@ -2,16 +2,14 @@ PATH
   remote: .
   specs:
     vk-ruby (0.9.3)
-      attr_configurable (>= 0.1.0)
-      faraday (>= 0.9.0)
-      faraday_middleware (>= 0.9.1)
-      multi_json
+      faraday (~> 0.9, >= 0.9.0)
+      faraday_middleware (~> 0.9, >= 0.9.1)
+      multi_json (~> 1.10.0, >= 1.10.1)
 
 GEM
   remote: http://rubygems.org/
   specs:
     addressable (2.3.6)
-    attr_configurable (0.1.0)
     coderay (1.1.0)
     cookiejar (0.3.2)
     crack (0.4.2)
@@ -53,7 +51,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.3)
     mini_portile (0.6.0)
-    multi_json (1.9.2)
+    multi_json (1.10.1)
     multipart-post (2.0.0)
     net-http-digest_auth (1.4)
     net-http-persistent (2.9.4)
@@ -92,18 +90,18 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  em-http-request (>= 1.1.2)
-  em-synchrony (>= 1.0.3)
-  eventmachine (>= 1.0.3)
-  json_pure (>= 1.8.1)
-  mechanize (>= 2.7.3)
-  net-http-persistent (>= 2.9.4)
-  oj (>= 2.8.1)
-  patron (>= 0.4.18)
-  pry (>= 0.9.12.6)
-  rake (>= 10.3.1)
-  rspec (>= 2.14.1)
-  typhoeus (>= 0.6.8)
+  em-http-request (~> 1.1, >= 1.1.2)
+  em-synchrony (~> 1.0, >= 1.0.3)
+  eventmachine (~> 1.0, >= 1.0.3)
+  json_pure (~> 1.8, >= 1.8.1)
+  mechanize (~> 2.7, >= 2.7.3)
+  net-http-persistent (~> 2.9, >= 2.9.4)
+  oj (~> 2.8, >= 2.8.1)
+  patron (~> 0.4, >= 0.4.18)
+  pry (~> 0.9, >= 0.9.12.6)
+  rake (~> 10.3, >= 10.3.1)
+  rspec (~> 2.14, >= 2.14.1)
+  typhoeus (~> 0.6, >= 0.6.8)
   vk-ruby!
-  webmock (>= 1.17.4)
-  yajl-ruby (>= 1.2.0)
+  webmock (~> 1.17, >= 1.17.4)
+  yajl-ruby (~> 1.2, >= 1.2.0)
