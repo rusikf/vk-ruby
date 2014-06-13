@@ -1,50 +1,84 @@
 require 'helpers'
 
 describe VK::Application, type: :application do
+  let(:params) {{ 'uids' => '1' }}
+  let(:host)   { /api.vk.com\/method/ }
 
-  it {
-    each_namespace { |namespace_name|
-      subject.send(namespace_name).tap { |object|
-        object.should be_a(VK::Methods)
-        object.send(:namespace).should eq(namespace_name)
-      }
-    }
+  let(:post) {
+    stub_request(:post, host).to_return({
+      body: '{}',
+      headers: {"Content-Type" => 'application/json'}
+    })
   }
 
-  context 'GET method' do
-    let(:verb) { :get }
+  let(:get) {
+    stub_request(:get, host).to_return({
+      body: '{}',
+      headers: {"Content-Type" => 'application/json'}
+    })
+  }
 
-    before { stubs_get! }
+  let(:request) { application.users.get(params) }
 
-    it {
-      each_methods { |method_name, params|
-        expect{ eval("subject.#{ method_name }(params)") }.to_not raise_error
-      }
-    }
-
-    it {
-      each_methods { |method_name, params|
-        eval("subject.#{ method_name }(params)").should eq(params.stringify)
-      }
-    }
+  before do
+    post
+    get
+    request
   end
 
-  context 'POST method' do
-    let(:verb) { :post }
+  describe :params do
+    it { post.with(body: hash_including(params)).should have_been_requested }
 
-    before { stubs_post! }
+    describe :version do
+      let(:version) { '1' }
+      let(:params) {{ version: version }}
 
-    it {
-      each_methods { |method_name, params|
-        expect{ eval("subject.#{ method_name }(params)") }.to_not raise_error
-      }
-    }
+      it { post.with(body: hash_including(v: version)).should have_been_requested }
+    end
 
-    it {
-      each_methods { |method_name, params|
-        eval("subject.#{ method_name }(params)").should eq(params.stringify)
-      }
-    }
+    describe :access_token do
+      let(:params) {{ access_token: 'test' }}
+
+      it { post.with(body: hash_including(params)).should have_been_requested }
+    end
+
+    describe :verb do
+      context(:post) { it { post.should have_been_requested } }
+
+      context(:get)  do 
+        let(:params) {{ verb: :get }}
+
+        it { get.should have_been_requested }
+      end
+    end
+
+    describe :host do
+      let(:host)   { /vkproxy.com\/method/ }
+      let(:params) {{ host: 'http://vkproxy.com/' }}
+
+      it { post.should have_been_requested }
+    end
+
+    describe :timeout do
+      let(:request) {}
+      let(:post)    { stub_request(:post, host).to_timeout }
+
+      it { expect{ application.users.get(params) }.to raise_error(Faraday::TimeoutError) }
+    end
+
+    describe :ssl do
+      context :on do
+        let(:host) { /https:\/\/api.vk.com\/method/ }
+        it { post.should have_been_requested }
+      end
+
+      context :off do
+        let(:params) {{ ssl: false, host: 'http://api.vk.com/' }}
+        let(:host)   { /http:\/\/api.vk.com\/method/ }
+
+        it { post.should have_been_requested }
+      end
+    end
   end
 
 end

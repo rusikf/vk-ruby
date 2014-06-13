@@ -1,8 +1,6 @@
 require 'helpers'
 
 describe VK::Uploading, type: :application do
-
-  before { stub_uploading! }
   
   describe "#upload" do
     let(:path)         { double("File path") }

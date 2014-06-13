@@ -14,7 +14,6 @@ describe VK::Config do
       host: 'new_host', 
       timeout: 'new_timeout',
       open_timeout: 'new_open_timeout',
-      adapter: 'new_adapter',
       middlewares: proc{},
       parallel_manager: Object.new,
       proxy: { user: 'new_user', password: 'new_password'},
@@ -38,7 +37,6 @@ describe VK::Config do
     its(:host)             { should eq(options[:host]) }
     its(:timeout)          { should eq(options[:timeout]) }
     its(:open_timeout)     { should eq(options[:open_timeout]) }
-    its(:adapter)          { should eq(options[:adapter]) }
     its(:middlewares)      { should eq(options[:middlewares]) }
     its(:parallel_manager) { should eq(options[:parallel_manager]) }
     its(:proxy)            { should eq(Faraday::ProxyOptions.from options[:proxy]) }
