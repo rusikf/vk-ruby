@@ -20,17 +20,29 @@ class  VK::MW::VkLogger < Faraday::Middleware
 
   def call(env)
     begin
-      api_method = env.url.path.split('/').reject(&:empty?).last
+      data = case env.body
+        when String
+         data = {
+           method: env.url.path.split('/').reject(&:empty?).last,
+           params: CGI.unescape(env.method == :get ? env.url.query : env.body)
+         }
+        when Faraday::CompositeReadIO
+         data = {
+           url: env.url.to_s,
+           file: true
+         }
+        else
+         data = {
+           url: env.url.to_s,
+           params: CGI.unescape(env.method == :get ? env.url.query : env.body)
+         }
+        end
 
-      @logger.info @request_formatter.call({
-        method: api_method,
-        params: CGI.unescape(env.method == :get ? env.url.query : env.body)
-      })
-      
+      info @request_formatter.call(data)
       result = @app.call(env)
 
-      @logger.info @response_formatter.call({
-        method: api_method,
+      info @response_formatter.call({
+        method: env.url.path.split('/').reject(&:empty?).last,
         params: CGI.unescape(env.body)
       })
 
