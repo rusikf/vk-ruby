@@ -37,7 +37,6 @@ module VK
         default.verb = :post
         default.timeout = 3
         default.open_timeout = 10
-        default.adapter = Faraday.default_adapter
 
         default.ssl.tap do |ssl|
           ssl.verify = true
@@ -55,7 +54,7 @@ module VK
           faraday.response :json, content_type: /\bjson$/
           faraday.response :http_errors
 
-          faraday.adapter  default.adapter
+          faraday.adapter  Faraday.default_adapter
         end
       end
     end

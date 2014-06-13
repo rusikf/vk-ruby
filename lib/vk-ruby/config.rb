@@ -1,7 +1,7 @@
 module VK
   class Config < Faraday::Options.new(:app_id, :app_secret, :version, :redirect_uri, :settings,
                                       :access_token, :verb, :host, :proxy, :ssl, :timeout,
-                                      :open_timeout, :adapter, :middlewares, :parallel_manager)
+                                      :open_timeout, :middlewares, :parallel_manager)
     alias v version
     alias v= version=
 
@@ -18,8 +18,11 @@ module VK
 
     memoized(:ssl) { self.class.options_for(:ssl).new }
 
-    def initialize(*args)
-      super
+    def initialize(params={})
+      params[:settings] ||= params.delete(:scope)
+      params[:version] ||= params.delete(:v)
+      params[:redirect_uri] ||= params.delete(:redirect_url)
+      super(params)
       yield self if block_given?
     end
 

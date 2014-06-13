@@ -12,7 +12,7 @@ module VK::Core
 
   def vk_call(method_name, params = {})
     params[:access_token] ||= access_token if access_token
-    params[:v] ||= config.version
+    params[:v] ||= params.delete(:version) || config.version
 
     response = request(params) { |req| req.url "/method/#{ method_name }" }
     response.body['response']
@@ -39,14 +39,15 @@ module VK::Core
     timeout = params.delete(:timeout) || config.timeout
     open_timeout = params.delete(:open_timeout) || config.open_timeout
 
-    ssl = config.ssl.merge params.delete(:ssl) || {}
+    ssl = params.delete(:ssl)
+    ssl = config.ssl.merge(ssl || {}) if ssl != false
 
-    proxy = if proxy_params = params.delete(:proxy)
-      proxy = config.proxy ? config.proxy.merge(proxy) : Faraday::ProxyOptions.from(proxy)
-    end
+    proxy = params.delete(:proxy)
+    proxy = proxy and config.proxy ? config.proxy.merge(proxy) : Faraday::ProxyOptions.from(proxy)
     
     middlewares = params.delete(:middlewares) || config.middlewares
-    
+    host = host.gsub('https', 'http') unless ssl
+
     Faraday.new(url: host, ssl: ssl, proxy: proxy, &middlewares).send(verb) do |req|
       req.options.timeout = timeout
       req.options.open_timeout = open_timeout
