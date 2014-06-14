@@ -5,7 +5,7 @@ require  'vk-ruby/version'
 
 Gem::Specification.new do |gem|
   gem.name = "vk-ruby"
-  
+  gem.licenses = ["MIT"]
   gem.version = VK::VERSION
   gem.date = Time.now.strftime '%Y-%m-%d'
   
@@ -14,14 +14,22 @@ Gem::Specification.new do |gem|
   gem.homepage = "http://github.com/zinenko/vk-ruby"
   
   gem.summary = "Ruby wrapper for vk.com API"
-  gem.description = "Ruby wrapper for vk.com API"
-  gem.licenses = ["MIT"]
+
+  description = <<-DESCRIPTION
+    VK-RUBY gives you full access to all vk.com API features. 
+    Has several types of method naming and methods calling, 
+    optional authorization, file uploading, logging, 
+    irb integration, parallel method calling and 
+    any faraday-supported http adapter of your choice.
+  DESCRIPTION
+
+  gem.description = description.gsub("\n", '').gsub("\t", '').gsub('  ', '')
 
   post_message = <<-THANKS
     Thanks for installing!
   THANKS
 
-  gem.post_install_message = post_message.gsub('  ', '')
+  gem.post_install_message = post_message.gsub("\n", '').gsub("\t", '').gsub('  ', '')
 
   gem.add_runtime_dependency 'faraday', '~> 0.9',  '>= 0.9.0'
   gem.add_runtime_dependency 'faraday_middleware', '~> 0.9',    '>= 0.9.1'
