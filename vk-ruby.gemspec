@@ -10,26 +10,26 @@ Gem::Specification.new do |gem|
   gem.date = Time.now.strftime '%Y-%m-%d'
   
   gem.authors = ["Andrew Zinenko"]
-  gem.email = "zinenkoan@gmail.com"
+  gem.email = "andrew@izinenko.ru"
   gem.homepage = "http://github.com/zinenko/vk-ruby"
   
   gem.summary = "Ruby wrapper for vk.com API"
 
   description = <<-DESCRIPTION
-    VK-RUBY gives you full access to all vk.com API features. 
-    Has several types of method naming and methods calling, 
-    optional authorization, file uploading, logging, 
-    irb integration, parallel method calling and 
-    any faraday-supported http adapter of your choice.
+VK-RUBY gives you full access to all vk.com API features. 
+Has several types of method naming and methods calling, 
+optional authorization, file uploading, logging, 
+irb integration, parallel method calling and 
+any faraday-supported http adapter of your choice.
   DESCRIPTION
 
-  gem.description = description.gsub("\n", '').gsub("\t", '').gsub('  ', '')
+  gem.description = description
 
   post_message = <<-THANKS
-    Thanks for installing!
+Thanks for installing!
   THANKS
 
-  gem.post_install_message = post_message.gsub("\n", '').gsub("\t", '').gsub('  ', '')
+  gem.post_install_message = post_message
 
   gem.add_runtime_dependency 'faraday', '~> 0.9',  '>= 0.9.0'
   gem.add_runtime_dependency 'faraday_middleware', '~> 0.9',    '>= 0.9.1'
@@ -61,6 +61,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.files = `git ls-files -z`.split("\x0")
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
-  gem.executables =  gem.files.grep(%r{^bin/}) { |f| File.basename(f) }
   gem.extra_rdoc_files = ["LICENSE.txt", "README.md" ]
 end
