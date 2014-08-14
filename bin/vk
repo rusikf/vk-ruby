@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+
+$:.unshift File.expand_path('../../lib', __FILE__)
+
+require 'vk-ruby'
+require 'vk-ruby/irb'
+
+begin
+  docopt = Docopt::docopt(VK::IRB::Params::DOCOPT)
+  VK::IRB.new(docopt).run!
+rescue Docopt::Exit => e
+  puts VK::IRB::Params::DOCOPT
+rescue Exception => e
+  puts e
+end

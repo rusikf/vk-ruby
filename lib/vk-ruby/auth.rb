@@ -30,7 +30,7 @@ module VK::Auth
     settings = settings.join(',') if settings.is_a?(Array)
     
     case params[:type]
-    when :client
+    when :client, :standalone
       "https://oauth.vk.com/authorize?" << URI.encode_www_form({
         client_id: app_id,
         scope: settings,
@@ -39,7 +39,7 @@ module VK::Auth
         response_type: :token,
         v: version
       })
-    when :site
+    when :site, :serverside
       "https://oauth.vk.com/authorize?" << URI.encode_www_form({
         client_id: app_id,
         scope: settings,
@@ -115,6 +115,68 @@ module VK::Auth
     self.access_token = response.body['access_token']
 
     response.body
+  end
+
+  def client_auth(params={})
+    app_id = params[:app_id] || config.app_id
+    settings = params[:settings] || params[:scope] || config.settings
+
+    fail(ArgumentError, 'You should pass :app_id parameter')   unless app_id
+    fail(ArgumentError, 'You should pass :settings parameter') unless settings
+    fail(ArgumentError, 'You should pass :login parameter')    unless params[:login]
+    fail(ArgumentError, 'You should pass :password parameter') unless params[:password]
+
+    agent = Mechanize.new
+    agent.user_agent_alias = 'Mac Safari'
+
+    begin
+      agent.get authorization_url(app_id: app_id, settings: settings, type: :client)
+
+      agent.page.form_with(action: /login.vk.com/){ |form|
+        form.email = params[:login]
+        form.pass  = params[:password]
+      }.submit
+    rescue Exception => ex
+      if ex.is_a?(VK::APIError)
+        raise
+      else
+        raise VK::AuthentificationError.new({
+          error: 'Authentification error',
+          description: 'invalid loging or password'
+        })
+      end
+    end
+
+    if agent.cookies.detect{|cookie| cookie.name == 'remixsid'}
+      sleep 1
+
+      url = agent.page
+               .body
+               .gsub("\n",'')
+               .gsub("  ",'')
+               .match(/.*function allow\(\)\s?\{.*}location.href\s?=\s?[\'\"\s](.+)[\'\"].+\}/)
+               .to_a
+               .last
+
+      agent.get(url)
+    else
+      raise VK::AuthorizationError.new({
+        error: 'Authorization error',
+        error_description: 'invalid loging or password'
+      })
+    end
+
+    sleep 1
+
+    response = agent.page
+                    .uri
+                    .fragment
+                    .split('&')
+                    .map{ |s| s.split '=' }
+                    .inject({}){ |a, (k,v)| a[k] = v; a }
+
+    self.expires_in = response['expires_in']
+    self.access_token = response['access_token']
   end
 
 end

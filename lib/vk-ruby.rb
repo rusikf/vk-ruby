@@ -25,6 +25,7 @@ require 'vk-ruby/application'
 require 'vk-ruby/errors/error'
 require 'vk-ruby/errors/api_error'
 require 'vk-ruby/errors/authorization_error'
+require 'vk-ruby/errors/authentification_error'
 require 'vk-ruby/errors/bad_response'
 
 module VK

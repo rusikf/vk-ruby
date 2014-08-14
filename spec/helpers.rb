@@ -1,4 +1,5 @@
 require 'vk-ruby'
+require 'vk-ruby/irb'
 require 'pry'
 require 'rspec'
 require 'uri'
@@ -8,8 +9,8 @@ require 'webmock/rspec'
 Dir['./spec/support/**/*.rb'].each { |f| require f }
 
 VK.configure do |default|
-  default.timeout = 1
-  default.open_timeout = 1
+  default.timeout = 5
+  default.open_timeout = 5
 
   default.middlewares = proc do |faraday|
     faraday.request :multipart

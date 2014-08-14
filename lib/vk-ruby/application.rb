@@ -12,11 +12,5 @@ class VK::Application
     yield(self) if block_given?
   end
 
-  YAML.load_file(File.expand_path('../namespaces.yml', __FILE__)).each do |namespace|
-    define_method namespace do
-      instance_variable_get("@#{ namespace }") ||
-      instance_variable_set("@#{ namespace }", VK::Methods.new(namespace, handler))
-    end
-  end
-
+  create_default_namespaces!
 end

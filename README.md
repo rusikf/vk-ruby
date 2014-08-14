@@ -6,8 +6,6 @@ Ruby wrapper for vk.com API.
 __VK-RUBY__ gives you full access to all API features.
 Has several types of method naming and methods calling, optional authorization, file uploading, logging, irb integration, parallel method calling and any faraday-supported http adapter of your choice.
 
-Compatible with Ruby 1.9.2, 1.9.3, Jruby and RBX.
-
 To get started working with vk.com API.
 First of all, to [register](http://vk.com/editapp?act=create) your own application and obtain the keys.
 Read [vk api documentation](http://vk.com/developers.php).
@@ -45,7 +43,7 @@ app.vk_call 'friends.getOnline', {uid: 1}
 
 app = VK::Application.new access_token: TOKEN
 
-app.adapter = :em_http # :em_synchrony or :patron or :typhoeus
+app.adapter = :em_http # or :em_synchrony or :patron or :typhoeus
 
 results = []
 
@@ -74,9 +72,6 @@ When you call the upload also need to specify the mime type file.
 
 ```.ruby
 
-url = 'http://cs2222.vkontakte.ru/upload.php?act=do_add'
-
-app.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 ```
 
 ### Authorization
@@ -84,89 +79,32 @@ app.upload(url: url, photo: ['/path/to/example.jpg', 'image/jpeg'])
 [VK](vk.com) has several types of applications and several types of authorization. They are different ways of authorization and access rights.
 more details refer to the [documentation](http://vk.com/developers.php?oid=-1&p=%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F)
 
-#### Application
+#### Site
 
 ```.ruby
 
-app = VK::Application.new app_id: 222, app_secret: 'secret key', redirect_uri: 'http://...'
-
-app.authorize(type: :serverside, code: CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
-
-# if app is secure application server
-
-app.authorize(type: :secure) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3"}
-
 ```
 
-#### Serverside(deprecated)
+
+#### Standlalone (Client)
 
 ```.ruby
 
-app = VK::Serverside.new app_id: 222, app_secret: 'secret key'
-
-app.authorize(CODE) # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3", "expires_in":43200, "user_id":6492}
 ```
 
-Class VK::Serverside is deprecate. Please use VK::Application
 
-
-#### Secure server(deprecated)
-
+#### Server
 
 ```.ruby
 
-app = VK::Secure.new app_id: 222, app_secret: 'secret key'
-
-app.authorize # => {"access_token":"533bacf01e11f55b536a565b57531ac114461ae8736d6506a3"}
 ```
-
-Class VK::Secure is deprecate. Please use VK::Application
-
-
-#### Standalone
-
-
-__Not supported__
-
-Class VK::Standalone is deprecate. Please use VK::Application
-
 
 ## Configuration
 
-Used to configure the gem [attr_configurable](https://github.com/zinenko/attr_configurable)
-The idea is the hierarchy of default parameters.
-
-__instance variable__ -> __class constant__ -> __module constant__
 
 ```.ruby
 
-module VK
-  APP_ID = 111
-
-  class Application
-    APP_ID = 222
-  end
-
-  class Secure
-  end
-end
-
-VK::Application.new.app_id # => 222
-
-VK::Application.new(app_id: 333).app_id # => 333
-
-VK::Secure.new.app_id # => 111
 ```
-
-For configuration available this options:
-
-* __logger__ application logger.
-* __verb__ http verb request. Only `:get` or `:post`.
-* __access_token__ your access token.
-* __open_timeout__  open_timeout request.
-* __timeout__ timeout request.
-* __proxy__ proxy params request.
-* __ssl__ indicating that you need to use ssl.
 
 More information on configuring ssl documentation [faraday](https://github.com/technoweenie/faraday/wiki/Setting-up-SSL-certificates)
 
@@ -182,63 +120,15 @@ It is an HTTP client lib that provides a common interface over many adapters (su
 
 ```.ruby
 
-def faraday_middleware
-  @faraday_middleware || proc do |faraday|
-    # request params encoders
-    faraday.request  :multipart
-    faraday.request  :url_encoded
-
-    # response body parse
-    faraday.response :json, content_type: /\bjson$/
-
-    # http adapter
-    faraday.adapter  self.adapter
-  end
-end
 ```
 
 #### Expanding stack
 
 ```.ruby
 
-app.faraday_middleware = proc do |faraday|
-  faraday.request  :multipart
-  faraday.request  :url_encoded
-
-  faraday.response :json, content_type: /\bjson$/
-  faraday.response :normalize_utf     # UTF nfkd normalization
-  faraday.response :validate_utf      # Remove invalid utf
-  faraday.response :vk_logger, self.logger
-
-  faraday.adapter  app.adapter
-end
 ```
 
 Read more [Middleware usage](https://github.com/technoweenie/faraday#advanced-middleware-usage)
-
-## IRB mode
-
-```.bash
-
-$ vk --help
-  -h, --help                       Display this help and exit
-  -v, --version                    Output version infomation and exit
-  -e, --eval [code]                Evaluate the given code and exit
-  -a, --access_token [token]       Your access token
-  -t, --type [type]                Application type
-  -i, --id [id]                    Application ID
-  -s, --secret [secret]            Application secret
-  -l, --logfile                    Logfile
-  -T, --types                      List application types
-
-$ vk -e 'puts vk.isAppUser'
-0
-
-$ vk -a 'your token'
-001 > vk.access_token
-002 > => "your token"
-
-```
 
 ## Contributing to vk-ruby
 
@@ -248,7 +138,6 @@ $ vk -a 'your token'
 * Start a feature/bugfix branch
 * Commit and push until you are happy with your contribution
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## Copyright
 

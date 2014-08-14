@@ -1,9 +1,8 @@
 require 'helpers'
 
 describe 'File uploading', type: :integration do
-  let(:application) { VK::Application.new access_token: access_token }
-  let(:path)        { File.expand_path('../../support/test.jpg', __FILE__) }
-  let(:mime)        { 'image/jpeg' }
+  let(:path) { File.expand_path('../../support/test.jpg', __FILE__) }
+  let(:mime) { 'image/jpeg' }
 
   before(:all) { authorizate! }
 
@@ -13,7 +12,7 @@ describe 'File uploading', type: :integration do
     expect(result).to be_a(Hash)
     expect(result['upload_url']).not_to be_nil
     
-    result = application.upload result['upload_url'], file: [path, mime] rescue binding.pry
+    result = application.upload result['upload_url'], file: [path, mime]
 
     expect(result).to be_a(Hash)
     expect(result['file']).not_to be_nil

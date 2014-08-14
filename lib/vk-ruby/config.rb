@@ -22,7 +22,13 @@ module VK
       params[:settings] ||= params.delete(:scope)
       params[:version] ||= params.delete(:v)
       params[:redirect_uri] ||= params.delete(:redirect_url)
-      super(params)
+      params[:middlewares] ||= params.delete(:stack)
+      
+      members.each { |member| self[member] = params[member.to_sym] }
+      
+      self.proxy = Faraday::ProxyOptions.from(params[:proxy]) if params[:proxy]
+      self.ssl = Faraday::SSLOptions.from(params[:ssl]) if params[:ssl]
+
       yield self if block_given?
     end
 
