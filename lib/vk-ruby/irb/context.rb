@@ -1,3 +1,5 @@
+# CLI context
+
 class VK::IRB::Context < VK::Application
 
   # def irb_help

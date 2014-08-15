@@ -1,3 +1,5 @@
+# Bad response error implementation
+
 class VK::BadResponse < VK::Error
   def_delegators :@env, :status
 

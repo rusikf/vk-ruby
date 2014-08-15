@@ -1,8 +1,11 @@
-# encoding: UTF-8
+# Logging middleware
+#
+# @see http://rubydoc.info/gems/faraday
 
 class  VK::MW::VkLogger < Faraday::Middleware
   extend Forwardable
 
+  # Default request/response formatter
   DEFAULT_FORMATTER = ->(data) { data.inspect }
 
   dependency 'cgi'

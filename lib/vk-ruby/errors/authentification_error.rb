@@ -1,4 +1,12 @@
+# Authentification error implementation
+
 class VK::AuthentificationError < VK::Error
+  
+  # @!attribute [r] error
+  #   @return [String] error
+  #
+  # @!attribute [r] description
+  #   @return [String] error description
 
   attr_accessor :error, :description
 

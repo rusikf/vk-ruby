@@ -1,7 +1,5 @@
-# encoding: UTF-8
-
-# @title Ruby wrapper for vk.com API.
-# @author Andrew Zinenko
+# Ruby wrapper for vk.com API
+# @author Andrew Zinenko <andrew@izinenko.ru>
 
 require 'faraday'
 require 'faraday_middleware'
@@ -9,6 +7,7 @@ require 'multi_json'
 require 'openssl'
 require 'forwardable'
 require 'yaml'
+require 'redcarpet'
 
 require 'vk-ruby/version'
 require 'vk-ruby/utils'
@@ -36,8 +35,8 @@ module VK
         default.version = '5.20'
         default.host = 'https://api.vk.com'
         default.verb = :post
-        default.timeout = 3
-        default.open_timeout = 10
+        default.timeout = 10
+        default.open_timeout = 3
 
         default.ssl.tap do |ssl|
           ssl.verify = true
@@ -65,8 +64,7 @@ module VK
     end
 
     def site_auth(params)
-      code = params.delete(:code)
-      Application.new(params).tap { |app| app.site_auth(code: code) }
+      Application.new(params).tap { |app| app.site_auth(params) }
     end
 
     def server_auth(params)

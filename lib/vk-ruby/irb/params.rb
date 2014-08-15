@@ -1,3 +1,5 @@
+# CLI params wrapper
+
 class VK::IRB::Params < Struct.new(:docopt)
   DOCOPT = <<-DOCOPT
 Vkontakte API interactive ruby shell.

@@ -1,0 +1,3 @@
+--load=./.yard_monkey_patch.rb
+--markup=markdown
+--markup-provider=redcarpet

@@ -1,3 +1,5 @@
+# CLI configuration wrapper
+
 class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :history_file, :eval_history, :users, :context_config)
   extend Forwardable
 

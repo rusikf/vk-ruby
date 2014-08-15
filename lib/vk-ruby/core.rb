@@ -1,14 +1,23 @@
-# encoding: UTF-8
+# API calling methods
 
 module VK::Core
 
+  # Get current application config 
+  #
+  # @return [VK::Config] application config
   def config
     @config ||= VK.config.dup
   end
 
-  # Calling API method.
+  # Calling API method
+  # 
+  # @param method_name [String] API method name (see {https://vk.com/dev/methods})
+  # @param params [Hash] API method params (see {https://vk.com/dev/methods})
   #
-  # {http://vk.com/developers.php?oid=-1&p=%D0%92%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5_%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81%D0%BE%D0%B2_%D0%BA_API Read more}
+  # @return [String] server response
+  #
+  # @example get information about Pavel Durov 
+  #   VK::Application.new.vk_call 'users.get', user_ids: 1 #=> [{"id"=>1, "first_name"=>"Павел", "last_name"=>"Дуров"}]
 
   def vk_call(method_name, params = {})
     params[:access_token] ||= access_token if access_token
@@ -18,9 +27,28 @@ module VK::Core
     response.body['response']
   end
 
-  # Parallel API methods calling.
+  # Parallel API methods calling
   #
-  # @params [Faraday::Adapter::EMHttp::Manager|Faraday::Adapter::EMSynchrony::ParallelManager] manager that this connection's adapter uses.
+  # @param [Faraday::Adapter::EMHttp::Manager|Faraday::Adapter::EMSynchrony::ParallelManager] manager that this connection's adapter uses
+  #
+  # @example parallel getting information about users
+  #   uids = { 1 => {}, 2 => {}, 3 => {}}
+  #
+  #   VK::Application.new.in_parallel do
+  #     uids.each do |uid,_|
+  #       app.users.get(user_ids: uid).each do |user|
+  #         uids[user["id"]] = user
+  #       end
+  #     end
+  #   end
+  #
+  #   puts uids #=> {
+  #     1 => {"id"=>1, "first_name"=>"Павел", "last_name"=>"Дуров"}, 
+  #     2 => {"id"=>2, "first_name"=>"Александра", "last_name"=>"Владимирова", "hidden"=>1}, 
+  #     3 => {"id"=>3, "first_name"=>"DELETED", "last_name"=>"", "deactivated"=>"deleted"}
+  #   }
+  #
+  # @return nothing :-)
 
   def in_parallel(manager = nil)
     manager ||= config.parallel_manager
@@ -32,7 +60,6 @@ module VK::Core
 
   private
 
-  # @private
   def request(params)
     host = params.delete(:host) || config.host
     verb = params.delete(:verb) || config.verb

@@ -1,25 +1,29 @@
+# File uploading implementation
+
 module VK::Uploading
 
-  # Files uploading.
+  # Files uploading
   #
-  # @param url [String] URL for the request.
-  # @param files [Array|Hash] list of files. See example for the list format.
-  # @return [Hash] The server response.
+  # @param url [String] URL for the request
+  # @param files [Array|Hash] list of files. See example for the list format
   #
-  # application.upload(
-  #   'http://example.vk.com/path',{
-  #     file1: ['/path/to/file1.jpg', 'image/jpeg'],
-  #     file2: [io, 'image/png', '/path/to/file2.png'] 
-  # })
+  # @return [Hash] The server response
   #
-  # or
+  # @example Upload with hash list
+  #   application.upload(
+  #     'http://example.vk.com/path',{
+  #       file1: ['/path/to/file1.jpg', 'image/jpeg'],
+  #       file2: [io, 'image/png', '/path/to/file2.png'] 
+  #   })
   #
-  # application.upload(
-  #   'http://example.vk.com/path',[
-  #     ['/path/to/file1.jpg', 'image/jpeg'],
-  #     [io, 'image/png', '/path/to/file2.png']
-  # ])
-
+  # @example Upload with array list
+  #   application.upload(
+  #     'http://example.vk.com/path',[
+  #       ['/path/to/file1.jpg', 'image/jpeg'],
+  #       [io, 'image/png', '/path/to/file2.png']
+  #   ])
+  #
+  # @raise [VK::APIError] with API error
 
   def upload(url, files)
     params = {}

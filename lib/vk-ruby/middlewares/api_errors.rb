@@ -1,4 +1,6 @@
-# encoding: UTF-8 
+# API error handler middleware
+#
+# @see http://rubydoc.info/gems/faraday
 
 class VK::MW::APIErrors < Faraday::Response::Middleware
 

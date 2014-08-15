@@ -1,3 +1,5 @@
+# Error implementation
+
 class VK::Error < StandardError
   extend Forwardable
 

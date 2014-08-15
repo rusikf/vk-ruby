@@ -15,15 +15,13 @@ Gem::Specification.new do |gem|
   
   gem.summary = "Ruby wrapper for vk.com API"
 
-  description = <<-DESCRIPTION
+  gem.description = <<-DESCRIPTION
 VK-RUBY gives you full access to all vk.com API features. 
 Has several types of method naming and methods calling, 
 optional authorization, file uploading, logging, 
 irb integration, parallel method calling and 
 any faraday-supported http adapter of your choice.
-  DESCRIPTION
-
-  gem.description = description
+DESCRIPTION
 
   gem.post_install_message = <<-THANKS
 ##################################
@@ -53,11 +51,11 @@ THANKS
   gem.add_runtime_dependency 'faraday', '~> 0.9',  '>= 0.9.0'
   gem.add_runtime_dependency 'faraday_middleware', '~> 0.9',    '>= 0.9.1'
   gem.add_runtime_dependency 'multi_json',         '~> 1.10.0', '>= 1.10.1'
-  gem.add_runtime_dependency 'jruby-openssl',      '>= 0.7.7' if RUBY_PLATFORM == 'java'
+  gem.add_runtime_dependency 'jruby-openssl',      '>= 0.7.7'    if RUBY_PLATFORM == 'java'
   gem.add_runtime_dependency 'mechanize','~> 2.7', '>= 2.7.3'
   gem.add_runtime_dependency 'docopt',   '~> 0.5', '>= 0.5.0'
   gem.add_runtime_dependency 'highline', '~> 1.6', '>= 1.6.21'
-
+  
   gem.add_development_dependency 'rake',      '~> 10.3', '>= 10.3.1'
   gem.add_development_dependency 'rspec',     '~> 2.14', '>= 2.14.1'
   gem.add_development_dependency 'pry',       '~> 0.9',  '>= 0.9.12.6'
@@ -65,6 +63,9 @@ THANKS
   gem.add_development_dependency 'json_pure', '~> 1.8',  '>= 1.8.1'
 
   gem.add_development_dependency 'net-http-persistent','~> 2.9', '>= 2.9.4'
+  gem.add_development_dependency 'yard',               '~> 0.8', '>= 0.8.7.4'
+  gem.add_development_dependency 'redcarpet',          '~> 3.0', '>= 3.1.2'
+  gem.add_development_dependency 'github-markup',      '~> 1.2', '>= 1.2.1'
 
   unless RUBY_PLATFORM == 'java'
     gem.add_development_dependency 'oj',              '~> 2.8', '>= 2.8.1'

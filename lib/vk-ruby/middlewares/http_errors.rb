@@ -1,4 +1,6 @@
-# encoding: UTF-8 
+# HTTP error handler middleware
+#
+# @see http://rubydoc.info/gems/faraday
 
 class VK::MW::HttpErrors < Faraday::Response::Middleware
 
