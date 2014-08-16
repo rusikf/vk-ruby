@@ -28,15 +28,12 @@ class VK::IRB
       remove_user!
     when params.update?
       update_user!
+    when params.eval?
+      evaluate_code!
+    when params.execute?
+      execute_file!
     else
-      case
-      when params.eval?
-        evaluate_code!
-      when params.execute?
-        execute_file!
-      else
-        start_session!
-      end
+      start_session!
     end  
   end
 
@@ -44,6 +41,14 @@ class VK::IRB
 
   def context
     @context ||= VK::IRB::Context.new(config.context_config)
+  end
+
+  def workspace
+    @workspace ||= ::IRB::WorkSpace.new(context)
+  end
+
+  def irb
+    @irb ||= ::IRB::Irb.new(workspace)
   end
 
   def list_user!
@@ -93,6 +98,13 @@ class VK::IRB
   end
 
   def start_session!
+    setup_irb
+    ::IRB.conf[:MAIN_CONTEXT] = irb.context
+    trap("SIGINT")   { irb.signal_handle }
+    catch(:IRB_EXIT) { irb.eval_input }
+  end
+
+  def setup_irb
     ::IRB.setup(nil)
     
     ::IRB.conf[:SAVE_HISTORY] = config.save_history
@@ -106,17 +118,7 @@ class VK::IRB
       PROMPT_N: "> ",
       RETURN: "#=> %s\n" 
     }
-
-    workspace = ::IRB::WorkSpace.new(context)
-    irb = ::IRB::Irb.new(workspace)
-
-    ::IRB.conf[:MAIN_CONTEXT] = irb.context
-
-    trap("SIGINT")   { irb.signal_handle }
-    catch(:IRB_EXIT) { irb.eval_input }
   end
-
-  private
   
   def resolve_access_token
     login = ask "login: " do |question|
