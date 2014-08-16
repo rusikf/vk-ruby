@@ -63,10 +63,7 @@ module VK::Auth
   def authorization_url(options)
     params = VK::AuthParams.new(config, options)
 
-    fail(ArgumentError, 'You should pass :app_id parameter')       unless params.app_id
-    fail(ArgumentError, 'You should pass :redirect_url parameter') unless params.redirect_url
-    fail(ArgumentError, 'You should pass :settings parameter')     unless params.settings
-    fail(ArgumentError, 'You should pass :version parameter')      unless params.version
+    params.check! :app_id, :redirect_url, :settings, :version
 
     case params.type
     when :client, :standalone
@@ -108,12 +105,7 @@ module VK::Auth
 
   def site_auth(options={})
     params = VK::AuthParams.new(config, options)
-
-    fail(ArgumentError, 'You should pass :code parameter')         unless params.code
-    fail(ArgumentError, 'You should pass :app_id parameter')       unless params.app_id
-    fail(ArgumentError, 'You should pass :app_secret parameter')   unless params.app_secret
-    fail(ArgumentError, 'You should pass :version parameter')      unless params.version
-    fail(ArgumentError, 'You should pass :redirect_url parameter') unless params.redirect_url
+    params.check! :code, :app_id, :app_secret, :version, :redirect_url
 
     query = {
       host: 'https://oauth.vk.com',
@@ -146,9 +138,7 @@ module VK::Auth
 
   def server_auth(options={})
     params = VK::AuthParams.new(config, options)
-
-    fail(ArgumentError, 'You should pass :app_id parameter')     unless params.app_id
-    fail(ArgumentError, 'You should pass :app_secret parameter') unless params.app_secret
+    params.check! :app_id, :app_secret
 
     query = {
       host: 'https://oauth.vk.com',
@@ -182,12 +172,8 @@ module VK::Auth
 
   def client_auth(options={})
     params = VK::AuthParams.new(config, options)
+    params.check! :app_id, :settings, :login, :password
     
-    fail(ArgumentError, 'You should pass :app_id parameter')   unless params.app_id
-    fail(ArgumentError, 'You should pass :settings parameter') unless params.settings
-    fail(ArgumentError, 'You should pass :login parameter')    unless params.login
-    fail(ArgumentError, 'You should pass :password parameter') unless params.password
-
     agent = Mechanize.new
     agent.user_agent_alias = 'Mac Safari'
 

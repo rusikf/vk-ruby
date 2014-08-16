@@ -46,5 +46,11 @@ class VK::AuthParams < Struct.new(:config, :options)
   def password
     options[:password]
   end
+
+  def check!(*names)
+    names.each do |name|
+      fail(ArgumentError, "You should pass :#{ name } parameter") unless send(name)
+    end
+  end
   
 end
