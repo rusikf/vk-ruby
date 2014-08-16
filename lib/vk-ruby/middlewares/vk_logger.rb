@@ -23,37 +23,39 @@ class  VK::MW::VkLogger < Faraday::Middleware
 
   def call(env)
     begin
-      data = case env.body
-        when String
-         data = {
-           method: env.url.path.split('/').reject(&:empty?).last,
-           params: CGI.unescape(env.method == :get ? env.url.query : env.body)
-         }
-        when Faraday::CompositeReadIO
-         data = {
-           url: env.url.to_s,
-           file: true
-         }
-        else
-         data = {
-           url: env.url.to_s,
-           params: CGI.unescape(env.method == :get ? env.url.query : env.body)
-         }
-        end
+      case env.body
+      when String
+       data = { method: api_method(env), params: api_params(env) }
+      when Faraday::CompositeReadIO
+       data = { url: env.url.to_s, file: true }
+      else
+       data = { url: env.url.to_s, params: api_params(env) }
+      end
 
       info @request_formatter.call(data)
+
       result = @app.call(env)
 
       info @response_formatter.call({
-        method: env.url.path.split('/').reject(&:empty?).last,
+        method: api_method(env),
         params: CGI.unescape(env.body)
       })
 
       result 
     rescue => ex
-      @logger.error @error_formatter.call(ex)
+      error @error_formatter.call(ex)
       raise ex
     end
+  end
+
+  private
+
+  def api_method(env)
+    env.url.path.split('/').reject(&:empty?).last
+  end
+
+  def api_params(env)
+    CGI.unescape(env.method == :get ? env.url.query : env.body)
   end
 
 end
