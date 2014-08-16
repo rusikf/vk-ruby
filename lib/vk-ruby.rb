@@ -20,6 +20,7 @@ require 'vk-ruby/core'
 require 'vk-ruby/auth'
 require 'vk-ruby/uploading'
 require 'vk-ruby/application'
+require 'vk-ruby/params'
 
 require 'vk-ruby/errors/error'
 require 'vk-ruby/errors/api_error'

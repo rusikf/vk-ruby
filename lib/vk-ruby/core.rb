@@ -51,41 +51,33 @@ module VK::Core
   # @return nothing :-)
 
   def in_parallel(manager = nil)
-    manager ||= config.parallel_manager
-
-    Faraday.new(parallel_manager: manager).in_parallel do
-      yield if block_given?
+    if block_given?
+      manager ||= config.parallel_manager
+      Faraday.new(parallel_manager: manager).in_parallel { yield }
     end
   end
 
   private
 
-  def request(params)
-    host = params.delete(:host) || config.host
-    verb = params.delete(:verb) || config.verb
-    timeout = params.delete(:timeout) || config.timeout
-    open_timeout = params.delete(:open_timeout) || config.open_timeout
+  def request(options)
+    params = VK::Params.new(config, options)
+    connection = Faraday.new(url: params.host, ssl: params.ssl, proxy: params.proxy, &params.middlewares)
 
-    ssl = params.delete(:ssl)
-    ssl = config.ssl.merge(ssl || {}) if ssl != false
+    connection.send(params.verb) do |req|
+      req.options.timeout = params.timeout
+      req.options.open_timeout = params.open_timeout
 
-    proxy = params.delete(:proxy)
-    proxy = proxy and config.proxy ? config.proxy.merge(proxy) : Faraday::ProxyOptions.from(proxy)
-    
-    middlewares = params.delete(:middlewares) || config.middlewares
-    host = host.gsub('https', 'http') unless ssl
-
-    Faraday.new(url: host, ssl: ssl, proxy: proxy, &middlewares).send(verb) do |req|
-      req.options.timeout = timeout
-      req.options.open_timeout = open_timeout
-
-      if Faraday::Env::MethodsWithBodies.include? verb
-        req.body = params
+      if methods_with_bodies? params.verb
+        req.body = params.query
       else
-        req.params = params
+        req.params = params.query
       end
       
       yield(req) if block_given?
     end
+  end
+
+  def methods_with_bodies?(verb)
+    Faraday::Env::MethodsWithBodies.include?(verb)
   end
 end
