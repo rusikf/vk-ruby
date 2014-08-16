@@ -22,6 +22,7 @@ require 'vk-ruby/uploading'
 require 'vk-ruby/application'
 require 'vk-ruby/params'
 require 'vk-ruby/auth_params'
+require 'vk-ruby/fake_browser'
 
 require 'vk-ruby/errors/error'
 require 'vk-ruby/errors/api_error'

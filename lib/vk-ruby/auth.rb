@@ -173,58 +173,18 @@ module VK::Auth
   def client_auth(options={})
     params = VK::AuthParams.new(config, options)
     params.check! :app_id, :settings, :login, :password
+
+    url = authorization_url(app_id: params.app_id, settings: params.settings, type: :client) << '&revoke=1'
     
-    agent = Mechanize.new
-    agent.user_agent_alias = 'Mac Safari'
-
-    begin
-      agent.get authorization_url(app_id: params.app_id, settings: params.settings, type: :client) << '&revoke=1'
-
-      agent.page.form_with(action: /login.vk.com/){ |form|
-        form.email = params.login
-        form.pass  = params.password
-      }.submit
-    rescue VK::APIError
-      raise
-    rescue Exception => ex
-      raise VK::AuthentificationError.new({
-        error: 'Authentification error',
-        description: 'invalid loging or password'
-      })
-    end
-
-    if agent.cookies.detect{|cookie| cookie.name == 'remixsid'}
-      sleep 1
-
-      url = agent.page
-               .body
-               .gsub("\n",'')
-               .gsub("  ",'')
-               .match(/.*function allow\(\)\s?\{.*}location.href\s?=\s?[\'\"\s](.+)[\'\"].+\}/)
-               .to_a
-               .last
-
-      agent.get(url)
-    else
-      raise VK::AuthorizationError.new({
-        error: 'Authorization error',
-        error_description: 'invalid loging or password'
-      })
-    end
-
+    browser = VK::FakeBrowser.new
+    browser.sign_in! url, params.login, params.password
     sleep 1
+    browser.authorize!
 
-    response = agent.page
-                    .uri
-                    .fragment
-                    .split('&')
-                    .map{ |s| s.split '=' }
-                    .inject({}){ |a, (k,v)| a[k] = v; a }
+    self.expires_in = browser.response['expires_in']
+    self.access_token = browser.response['access_token']
 
-    self.expires_in = response['expires_in']
-    self.access_token = response['access_token']
-
-    response
+    browser.response
   end
 
 end
