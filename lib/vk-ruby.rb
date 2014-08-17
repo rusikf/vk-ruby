@@ -32,51 +32,84 @@ require 'vk-ruby/errors/bad_response'
 
 module VK
   class << self
+
+    # Global config
     def config
-      @config ||= VK::Config.new do |default|
-        default.settings = 'notify,friends,offline'
-        default.version = '5.20'
-        default.host = 'https://api.vk.com'
-        default.verb = :post
-        default.timeout = 10
-        default.open_timeout = 3
-
-        default.ssl.tap do |ssl|
-          ssl.verify = true
-          ssl.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
-        end
-
-        default.parallel_manager = Faraday::Adapter::EMHttp::Manager.new
-
-        default.middlewares = proc do |faraday|
-          faraday.request :multipart
-          faraday.request :url_encoded
-
-          faraday.response :vk_logger
-          faraday.response :api_errors
-          faraday.response :json, content_type: /\bjson$/
-          faraday.response :http_errors
-
-          faraday.adapter  Faraday.default_adapter
-        end
-      end
+      @config ||= VK::Config.new
     end
     
+    # Configure VK-RUBY
+    #
+    # @yieldparam config [VK::Config] global config
+
     def configure
-      yield(config) if block_given?
+      yield config if block_given?
     end
 
-    def site_auth(params)
-      Application.new(params).tap { |app| app.site_auth(params) }
+    # Get authorization URL helper
+    #
+    # @see VK::Auth#authorization_url
+
+    def authorization_url(options={})
+      Application.new.authorization_url(options={})
     end
 
-    def server_auth(params)
-      Application.new(params).tap { |app| app.server_auth(params) }
+    # Create a new application and performs site authorization
+    #
+    # @see VK::Auth#site_auth
+
+    def site_auth(options={})
+      Application.new(options).tap { |app| app.site_auth(code: options[:code]) }
     end
 
-    def authorization_url(params)
-      Application.new.authorization_url(params)
+    # Create a new application and performs server authorization
+    #
+    # @see VK::Auth#server_auth
+
+    def server_auth(options={})
+      Application.new(options).tap { |app| app.server_auth }
     end
+
+    # Create a new application and performs client authorization
+    #
+    # @see VK::Auth#client_auth
+
+    def client_auth(options={})
+      Application.new(options).tap do |app| 
+        app.client_auth({
+          login: options[:login],
+          password: options[:password]
+        })
+      end
+    end
+
+  end
+end
+
+VK.configure do |default|
+  default.settings = 'notify,friends,offline'
+  default.version = '5.20'
+  default.host = 'https://api.vk.com'
+  default.verb = :post
+  default.timeout = 10
+  default.open_timeout = 3
+
+  default.ssl.tap do |ssl|
+    ssl.verify = true
+    ssl.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
   end
 
+  default.parallel_manager = nil
+
+  default.middlewares = proc do |faraday|
+    faraday.request :multipart
+    faraday.request :url_encoded
+
+    faraday.response :vk_logger
+    faraday.response :api_errors
+    faraday.response :json, content_type: /\bjson$/
+    faraday.response :http_errors
+
+    faraday.adapter Faraday.default_adapter
+  end
 end

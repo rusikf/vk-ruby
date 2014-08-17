@@ -1,3 +1,5 @@
+# API request params wrapper
+
 class VK::Params < Struct.new(:config, :options)
 
   def host

@@ -1,3 +1,5 @@
+# Authorization request params wrapper
+
 class VK::AuthParams < Struct.new(:config, :options)
 
   # Default client/standalone application redirect URL
