@@ -5,15 +5,22 @@
 [![Dependency Status](https://gemnasium.com/zinenko/vk-ruby.svg)](https://gemnasium.com/zinenko/vk-ruby)
 
 Ruby wrapper for vk.com API.
+[Documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames).
 
-__VK-RUBY__ gives you full access to all API features.
-Has several types of method naming and methods calling, optional authorization, file uploading, logging, irb integration, parallel method calling and any faraday-supported http adapter of your choice.
 
-To get started working with vk.com API.
-First of all, to [register](http://vk.com/editapp?act=create) your own application and obtain the keys.
-Read [vk api documentation](http://vk.com/developers.php).
+__VK-RUBY__ gives you full access to all API features:
 
-[vk-ruby documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames)
+- [Has several types of method naming and methods calling](#create-new-application)
+- [Parallel method calling](#parallel-api-method-calling)
+- All authorization methods
+  - [Site](#site)
+  - [Server](#server)
+  - [Standalone](#standalone-client)
+- [File uploading](#uploading-files)
+- [Any faraday features](#middlewares)
+- IRB integration
+
+To get started, you need to [register](http://vk.com/editapp?act=create) with [vk.com](vk.com) own application and get the keys and read [VK API documentation](http://vk.com/dev).
 
 ## Installation
 
@@ -24,6 +31,9 @@ gem install vk-ruby
 ## How to use
 
 ### Create new application
+
+__VK-RUBY__ has many configuration parameters, they are passed in when creating the application.
+Complete list, see the [configuration](#configuration) section.
 
 ```.ruby
 app = VK::Application.new(app_id: 1, version: '5.20', access_token: '[TOKEN]')
@@ -45,11 +55,17 @@ __or__
 app.vk_call 'friends.getOnline', {uid: 1} # => Online friends
 ```
 
+The parameters passed to the method call, have a higher priority than the configuration settings.
+In this example, API version upon request will be equal to 5.1.
+
+```.ruby
+VK::Application.new(version: '5.0').get_online(uid: 1, v: '5.1') # HTTP request with v=5.1 param
+```
+
 ### Parallel API method calling
 
 __VK-RUBY__ also supports parallel execution of requests.
 [More information about parallel requests](https://github.com/lostisland/faraday/wiki/Parallel-requests).
-
 
 ```.ruby
 require 'typhoeus'
@@ -76,7 +92,6 @@ puts uids
 #  2 => {"id"=>2, "first_name"=>"Александра", "last_name"=>"Владимирова", "hidden"=>1}, 
 #  3 => {"id"=>3, "first_name"=>"DELETED", "last_name"=>"", "deactivated"=>"deleted"}
 #}
-
 ```
 
 ### Uploading files
@@ -98,10 +113,9 @@ app.upload(
     file1: ['/path/to/file1.jpg', 'image/jpeg'],
     file2: [File.open('/path/to/file2.png'), 'image/png', '/path/to/file2.png'] 
 })
-
 ```
 
-or 
+__or__
 
 ```.ruby
 app.upload(
@@ -109,7 +123,6 @@ app.upload(
     ['/path/to/file1.jpg', 'image/jpeg'],
     [File.open('/path/to/file2.png'), 'image/png', '/path/to/file2.png']
 ])
-
 ```
 
 ### Authorization
@@ -121,10 +134,10 @@ They are different ways of authorization and access rights, more details refer t
 
 Site authorization process consists of 4 steps:
 
-1. Opening the browser to authenticate the user on the site __VK__
+1. Opening the browser to authenticate the user on the __VK__ 
 2. Permit the user to access their data
 3. Transfer site value code for the access key
-4. Preparation of the application server access key `access_token` to access the API __VK__
+4. Preparation of the application server access key `access_token` to access the __VK API__
 
 For the first step you need to generate correct URL
 
@@ -138,7 +151,6 @@ app.authorization_url({
 })
 
 #=> "https://oauth.vk.com/authorize?client_id=123&scope=friends,audio&redirect_uri=https://example.com/&response_type=token&v=5.20"
-
 ```
 
 Once user permit the to access their data, on specified `:redirect_url` come __GET__ request with `code` parameter, which is used to obtain an `access_token`.
@@ -153,7 +165,6 @@ To access the [administrative methods API](https://vk.com/dev/secure), which doe
 
 ```.ruby
 app.server_auth(app_id: '[APP_ID]', app_secret: '[SECRET]') #=> { "access_token" : '[TOKEN]' }
-
 ```
 
 #### Standalone (Client)
