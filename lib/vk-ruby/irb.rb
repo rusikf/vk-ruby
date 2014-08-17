@@ -68,7 +68,7 @@ class VK::IRB
   end
 
   def remove_user!
-    config.users.delete(params.user_name)
+    config.remove_user(params.user_name)
   end
 
   def update_user!
