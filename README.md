@@ -229,19 +229,19 @@ Below are all the configuration keys for __VK-RUBY__.
 
 #### SSL configuration
 
-|         Name        |           Default         |
-| :------------------ | -------------------------:|
-| :verify             | true                      |    
-| :verify_mode        | OpenSSL::SSL::VERIFY_NONE |
-| :ca_file            | nil                       |
-| :ca_path            | nil                       |
-| :cert_store         | nil                       |
-| :client_cert        | nil                       |
-| :client_key         | nil                       |
-| :certificate        | nil                       |
-| :private_key        | nil                       |
-| :verify_depth       | nil                       |
-| :version            | nil                       |
+|         Name        |            Default          |
+| :------------------ | ---------------------------:|
+| :verify             | `true`                      |    
+| :verify_mode        | `OpenSSL::SSL::VERIFY_NONE` |
+| :ca_file            | nil                         |
+| :ca_path            | nil                         |
+| :cert_store         | nil                         |
+| :client_cert        | nil                         |
+| :client_key         | nil                         |
+| :certificate        | nil                         |
+| :private_key        | nil                         |
+| :verify_depth       | nil                         |
+| :version            | nil                         |
 
 More information on configuring ssl documentation [faraday](https://github.com/lostisland/faraday/wiki/Setting-up-SSL-certificates)
 
