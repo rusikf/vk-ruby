@@ -58,7 +58,6 @@ describe VK::IRB::Config do
 
   it { config.app_name.should eq(app_name) }
   it { config.save_history.should eq(save_history) }
-  it { config.history_file.should eq(history_file) }
   it { config.eval_history.should eq(eval_history) }
   it { config.users.should eq(users) }
   it { config.app_id.should eq(app_id) }
