@@ -10,7 +10,7 @@ Ruby wrapper for vk.com API.
 
 __VK-RUBY__ gives you full access to all API features:
 
-- [Has several types of method naming and methods calling](#create-new-application)
+- [Has several types of methods naming and methods calling](#create-new-application)
 - [Parallel method calling](#parallel-api-method-calling)
 - All authorization methods
   - [Site](#site)

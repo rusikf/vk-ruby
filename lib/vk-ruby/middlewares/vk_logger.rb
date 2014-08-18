@@ -55,7 +55,7 @@ class  VK::MW::VkLogger < Faraday::Middleware
   end
 
   def api_params(env)
-    CGI.unescape(env.method == :get ? env.url.query : env.body)
+    CGI.unescape(env.method == :get ? env.url.query : env.body.to_s)
   end
 
 end

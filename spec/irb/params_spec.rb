@@ -227,7 +227,7 @@ describe VK::IRB::Params do
             it { params.token.should be_nil }
             it { params.evaluated_code.should be_nil }
             it { params.executed_file.should be_nil }
-            it { params.config_file.should be_nil }
+            it { params.config_file.should eq VK::IRB::Params::DEFAULT_CONFIG_FILE }
           end
         end
       end

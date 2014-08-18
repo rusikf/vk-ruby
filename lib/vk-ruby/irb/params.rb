@@ -2,7 +2,7 @@
 
 class VK::IRB::Params < Struct.new(:docopt)
   DOCOPT = <<-DOCOPT
-Vkontakte API interactive ruby shell.
+VK interactive ruby shell
 
 Usage:
   vk list [options]
@@ -22,6 +22,8 @@ Arguments:
   <code>  Ruby code.
   <file>  File name.
 DOCOPT
+
+  DEFAULT_CONFIG_FILE = "#{ ENV['HOME'] }/.vk.yml".freeze
 
   def list?
     docopt['list']
@@ -62,9 +64,8 @@ DOCOPT
   def config_file
     @config_file ||= [
       docopt['--config'],
-      "#{ ENV['PWD'] }/.vk.yml",
-      "#{ ENV['HOME'] }/.vk.yml"
-    ].compact.detect {|f| File.exists?(f) }
+      "#{ ENV['PWD'] }/.vk.yml"
+    ].compact.detect {|f| File.exists?(f) } || DEFAULT_CONFIG_FILE
   end
   
 end

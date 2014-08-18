@@ -3,62 +3,58 @@ require 'helpers'
 describe VK::IRB::Config do
   let(:path)             { 'config file path' }
   let(:config)           { VK::IRB::Config.new(path) }
-  let(:app_name)         { 'app_name' }
-  let(:save_history)     { 100 }
-  let(:history_file)     { 'save history file path' }
-  let(:eval_history)     { 'eval history file path' }
+
   let(:app_id)           { 'app_id' }
+  let(:app_name)         { 'app_name' }
   let(:app_secret)       { 'app_secret' }
-  let(:version)          { 'version' }
-  let(:redirect_uri)     { 'redirect_uri' }
-  let(:settings)         { 'settings' }
-  let(:verb)             { 'verb' }
+  let(:eval_history)     { 'eval history file path' }
+  let(:history_file)     { 'save history file path' }
   let(:host)             { 'host' }
-  let(:timeout)          { 'timeout' }
+  let(:middlewares)      { 'faraday middlewares' }
   let(:open_timeout)     { 'open_timeout' }
   let(:parallel_manager) { 'parallel_manager' }
-  let(:middlewares)      { 'faraday middlewares' }
-  let(:proxy_user)       { 'user' }
   let(:proxy_password)   { 'password' }
-  let(:ssl_verify)       { 'ssl_verify' }
+  let(:proxy_user)       { 'user' }
+  let(:redirect_uri)     { 'redirect_uri' }
+  let(:save_history)     { 100 }
+  let(:settings)         { 'settings' }
   let(:ssl_ca_file)      { 'ssl_ca_file' }
   let(:ssl_ca_path)      { 'ssl_ca_path' }
-  let(:users)            {{ }}
+  let(:ssl_verify)       { 'ssl_verify' }
+  let(:timeout)          { 'timeout' }
+  let(:users)            {{ 'admin' => 'token1' }}
+  let(:verb)             { 'verb' }
+  let(:version)          { 'version' }
 
   let(:data) {{
-    'app_name' => app_name,
-    'save_history' => save_history,
-    'history_file' => history_file,
-    'eval_history' => eval_history,
-    'users' => users,
-    'app_id' => app_id,
-    'app_secret' => app_secret,
-    'version' => version,
-    'redirect_uri' => redirect_uri,
-    'settings' => settings,
-    'verb' => verb,
-    'host' => host, 
-    'timeout' => timeout,
-    'open_timeout' => open_timeout,
-    'middlewares' => middlewares,
-    'parallel_manager' => parallel_manager,
-    'proxy' => { 
-      'user' => proxy_user,
-      'password' => proxy_password
+    app_id: app_id,
+    app_name: app_name,
+    app_secret: app_secret,
+    eval_history: eval_history,
+    history_file: history_file,
+    host: host, 
+    middlewares: middlewares,
+    open_timeout: open_timeout,
+    parallel_manager: parallel_manager,
+    redirect_uri: redirect_uri,
+    save_history: save_history,
+    settings: settings,
+    timeout: timeout,
+    users: users,
+    verb: verb,
+    version: version,
+    proxy: { 
+      user: proxy_user,
+      password: proxy_password
     },
-    'ssl' => {
-      'verify' => ssl_verify,
-      'ca_file' => ssl_ca_file,
-      'ca_path' => ssl_ca_path
+    ssl: {
+      verify: ssl_verify,
+      ca_file: ssl_ca_file,
+      ca_path: ssl_ca_path
     }
   }}
 
-  before do 
-    File.stub(:exists?).with(path).and_return(true)
-    File.stub(:exists?).with("/Users/andi/.pry_history").and_return(false)
-    File.stub(:open).with(path).and_return(data)
-    YAML.stub(:load).with(data).and_return(data)
-  end
+  before { VK::IRB::Config.any_instance.stub(:load_data).and_return(data) }
 
   it { config.app_name.should eq(app_name) }
   it { config.save_history.should eq(save_history) }
@@ -86,8 +82,6 @@ describe VK::IRB::Config do
   it { config.ssl.ca_path.should eq(ssl_ca_path) }
 
   describe 'users' do
-    let(:users) {{ 'admin' => 'token1' }}
-
     before { config.stub(:save!) }
 
     describe 'add_user' do
@@ -112,7 +106,7 @@ describe VK::IRB::Config do
     end
 
     describe 'user_exists?' do
-      it { config.user_exists?('admin').should be_true }
+      it { config.user_exists?(users.keys.first).should be_true }
       it { config.user_exists?('admin1').should be_false }
     end
   end

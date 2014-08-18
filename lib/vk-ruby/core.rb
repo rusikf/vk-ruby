@@ -67,7 +67,7 @@ module VK::Core
       req.options.timeout = params.timeout
       req.options.open_timeout = params.open_timeout
 
-      if methods_with_bodies? params.verb
+      if methods_with_bodies? params.verb.to_sym
         req.body = params.query
       else
         req.params = params.query

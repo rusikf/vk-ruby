@@ -85,31 +85,3 @@ module VK
 
   end
 end
-
-VK.configure do |default|
-  default.settings = 'notify,friends,offline'
-  default.version = '5.20'
-  default.host = 'https://api.vk.com'
-  default.verb = :post
-  default.timeout = 10
-  default.open_timeout = 3
-
-  default.ssl.tap do |ssl|
-    ssl.verify = true
-    ssl.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
-  end
-
-  default.parallel_manager = nil
-
-  default.middlewares = proc do |faraday|
-    faraday.request :multipart
-    faraday.request :url_encoded
-
-    faraday.response :vk_logger
-    faraday.response :api_errors
-    faraday.response :json, content_type: /\bjson$/
-    faraday.response :http_errors
-
-    faraday.adapter Faraday.default_adapter
-  end
-end

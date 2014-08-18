@@ -40,7 +40,7 @@ class VK::IRB
   private
 
   def context
-    @context ||= VK::IRB::Context.new(config.context_config)
+    @context ||= VK::IRB::Context.new(config)
   end
 
   def workspace
@@ -98,21 +98,25 @@ class VK::IRB
   end
 
   def start_session!
-    setup_irb
+    puts "User '#{ params.user_name }' does not exists." unless user
+    setup
     ::IRB.conf[:MAIN_CONTEXT] = irb.context
-    trap("SIGINT")   { irb.signal_handle }
-    catch(:IRB_EXIT) { irb.eval_input }
+    
+    begin
+      trap("SIGINT")   { irb.signal_handle }
+      catch(:IRB_EXIT) { irb.eval_input }
+    ensure
+      config.save!
+    end
   end
 
-  def setup_irb
+  def setup
     ::IRB.setup(nil)
-    
     ::IRB.conf[:SAVE_HISTORY] = config.save_history
-    ::IRB.conf[:HISTORY_FILE] = config.history_file
     ::IRB.conf[:EVAL_HISTORY] = config.eval_history
     ::IRB.conf[:PROMPT_MODE] = :VK
     ::IRB.conf[:PROMPT][:VK] = {
-      PROMPT_I: "#{ user ? user : 'unauthorized' } > ",
+      PROMPT_I: "#{ config.app_name } : #{ user ? user : 'unauthorized' } > ",
       PROMPT_S: "... ",
       PROMPT_C: "> ",
       PROMPT_N: "> ",

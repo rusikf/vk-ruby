@@ -16,9 +16,14 @@ describe VK::Config do
       open_timeout: 'new_open_timeout',
       middlewares: proc{},
       parallel_manager: Object.new,
-      proxy: { user: 'new_user', password: 'new_password'},
+      proxy: { 
+        uri: 'http://host:8080',
+        user: 'new_user', 
+        password: 'new_password'
+      },
       ssl: {
         verify: false,
+        verify_mode: false,
         ca_file: 'new_ca_file',
         ca_path: 'new_ca_path'
       }
@@ -39,8 +44,15 @@ describe VK::Config do
     its(:open_timeout)     { should eq(options[:open_timeout]) }
     its(:middlewares)      { should eq(options[:middlewares]) }
     its(:parallel_manager) { should eq(options[:parallel_manager]) }
-    its(:proxy)            { should eq(Faraday::ProxyOptions.from options[:proxy]) }
-    its(:ssl)              { should eq(subject.ssl.merge options[:ssl]) }
+
+    it { expect(application.config.ssl.verify).to eq(options[:ssl][:verify]) }
+    it { expect(application.config.ssl.ca_file).to eq(options[:ssl][:ca_file]) }
+    it { expect(application.config.ssl.ca_path).to eq(options[:ssl][:ca_path]) }
+    it { expect(application.config.ssl.verify_mode).to eq(options[:ssl][:verify_mode]) }
+
+    it { expect(application.config.proxy.uri).to eq(options[:proxy][:uri]) }
+    it { expect(application.config.proxy.user).to eq(options[:proxy][:user]) }
+    it { expect(application.config.proxy.password).to eq(options[:proxy][:password]) }
   end
 
 end

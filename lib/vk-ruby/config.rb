@@ -60,9 +60,29 @@ class VK::Config < Faraday::Options.new(:app_id, :app_secret, :version, :redirec
   alias stack middlewares
   alias stack= middlewares=
 
-  options ssl: Faraday::SSLOptions, proxy: Faraday::ProxyOptions
+  DEFAULT = {
+    settings: 'notify,friends,offline',
+    version: '5.20',
+    host: 'https://api.vk.com',
+    verb: :post,
+    timeout: 10,
+    open_timeout: 3,
+    ssl: {
+      verify: true,
+      verify_mode: ::OpenSSL::SSL::VERIFY_NONE
+    }
+  }
 
-  memoized(:ssl) { self.class.options_for(:ssl).new }
+  DEFAULT_STACK =  proc do |faraday|
+    faraday.request :multipart
+    faraday.request :url_encoded
+
+    faraday.response :api_errors
+    faraday.response :json, content_type: /\bjson$/
+    faraday.response :http_errors
+
+    faraday.adapter Faraday.default_adapter
+  end
 
   # Initialize a new VK::Config instance
   #
@@ -71,29 +91,35 @@ class VK::Config < Faraday::Options.new(:app_id, :app_secret, :version, :redirec
   # @yieldparam config [VK::Config] self
 
   def initialize(params={})
-    params[:settings] ||= params.delete(:scope)
-    params[:version] ||= params.delete(:v)
-    params[:redirect_uri] ||= params.delete(:redirect_url)
-    params[:middlewares] ||= params.delete(:stack)
-    
-    members.each { |member| self[member] = params[member.to_sym] }
-    
-    self.proxy = Faraday::ProxyOptions.from(params[:proxy]) if params[:proxy]
-    self.ssl = Faraday::SSLOptions.from(params[:ssl]) if params[:ssl]
+    params = VK::Utils.deep_merge(DEFAULT, params.dup)
+    params.each { |k,v| send("#{k}=", v) if respond_to?("#{k}=") }
 
+    self.proxy = Faraday::ProxyOptions.from(self.proxy) if self.proxy
+    self.ssl = Faraday::SSLOptions.from(self.ssl) if self.ssl
+    self.middlewares ||= DEFAULT_STACK
+    
     yield self if block_given?
   end
 
-  def merge(params)
-    dup.tap do |config|
-      config.ssl.merge! params.delete(:ssl) || {}
+  def merge!(params)
+    params = params.dup
+    
+    if ssl_options = params.delete(:ssl)
+      self.ssl = self.ssl ? self.ssl.merge!(ssl_options) : Faraday::SSLOptions.from(ssl_options)
+    end
 
-      if proxy_options = params.delete(:proxy)
-        config.proxy = config.proxy ? config.proxy.merge!(proxy_options) : Faraday::ProxyOptions.from(proxy_options)
-      end
+    if proxy_options = params.delete(:proxy)
+      self.proxy = self.proxy ? self.proxy.merge!(proxy_options) : Faraday::ProxyOptions.from(proxy_options)
+    end
 
-      params.each { |k,v| send("#{k}=", v) }
-    end  
+    params.each { |k,v| send("#{k}=", v) if respond_to?("#{k}=") }
+  end
+
+  def to_h
+    super.tap do |h|
+      h[:ssl] = h[:ssl].to_h if h[:ssl]
+      h[:proxy] = h[:proxy].to_h if h[:proxy]
+    end
   end
 
 end

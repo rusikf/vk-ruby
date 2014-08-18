@@ -25,7 +25,7 @@ class VK::Params < Struct.new(:config, :options)
   def proxy
     if options[:proxy]
       proxy_options = Faraday::ProxyOptions.from(options[:proxy])
-      config.proxy ? config.proxy.merge(proxy_options) : Faraday::ProxyOptions.from(options[:proxy])
+      config.proxy ? config.proxy.merge(proxy_options) : proxy_options
     else
       config.proxy
     end

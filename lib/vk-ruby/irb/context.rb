@@ -2,8 +2,9 @@
 
 class VK::IRB::Context < VK::Application
 
-  # def irb_help
-  #   'hint'
-  # end
+  attr_reader :config
 
+  def initialize(config)
+    @config = config
+  end
 end

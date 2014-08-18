@@ -1,6 +1,6 @@
 require 'redcarpet'
 
-# выкинуть после публикации гема с этой строчкой кода
+# выкинуть после релиза YARD с этой строчкой кода
 # https://github.com/lsegal/yard/blob/master/lib/yard/templates/helpers/html_helper.rb#L57
 
 module YARD::Templates::Helpers::HtmlHelper
