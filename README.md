@@ -185,6 +185,31 @@ app.client_auth(login: '[LOGIN]', password: '[PASSWORD]') #=> { "access_token" :
 
 ### Configuration
 
+__VK-RUBY__ has a large number of configuration attributes. 
+You can pass them when you create the application, and the method call.
+
+```ruby
+# global config
+VK.configure do |config|
+  config.app_id = 1
+end
+
+VK::Application.new.app_id #=> 1
+
+VK::Application.new(app_id: 2).app_id #=> 2
+
+app = VK::Application.new do |a|
+  a.app_id = 3
+end
+
+app.app_id #=> 3
+````
+
+In this example, only one key is set to not look difficult. 
+
+Below are all the configuration keys for __VK-RUBY__.
+
+
 |         Name        |     Description   |   Default  |
 | :------------------ |:------------------| ----------:|
 | :app_id             | Application ID | `nil` |
@@ -195,15 +220,38 @@ app.client_auth(login: '[LOGIN]', password: '[PASSWORD]') #=> { "access_token" :
 | :access_token       | Access token | `nil` |
 | :verb               | HTTP verb | `:post` |
 | :host               | API host | https://api.vk.com |
-| :proxy              | Proxy settings | nil |
-| :ssl                | SSL settings | ``` { verify: true, verify_mode: OpenSSL::SSL::VERIFY_NONE } ``` |
 | :timeout            | Request timeout | `10` |
 | :open_timeout       | Open connection timeout | `3` |
-| :middlewares        | Faraday middlewares stack | [_see middlewares section_](#Middlewares) |
 | :parallel_manager   | Parallel request manager  | `nil` |
+| :proxy              | Proxy settings | `nil` [_see proxy configuration section_](#proxy-configuration) |
+| :ssl                | SSL settings | [_see ssl configuration section_](#ssl-configuration) |
+| :middlewares        | Faraday middlewares stack | [_see middlewares section_](#middlewares) |
 
+#### SSL configuration
+
+|         Name        |           Default         |
+| :------------------ | -------------------------:|
+| :verify             | true                      |    
+| :verify_mode        | OpenSSL::SSL::VERIFY_NONE |
+| :ca_file            | nil                       |
+| :ca_path            | nil                       |
+| :cert_store         | nil                       |
+| :client_cert        | nil                       |
+| :client_key         | nil                       |
+| :certificate        | nil                       |
+| :private_key        | nil                       |
+| :verify_depth       | nil                       |
+| :version            | nil                       |
 
 More information on configuring ssl documentation [faraday](https://github.com/lostisland/faraday/wiki/Setting-up-SSL-certificates)
+
+#### Proxy configuration
+
+|         Name        |  Default  |
+| :------------------ | ---------:|
+| :uri                | nil       |    
+| :user               | nil       |
+| :password           | nil       |
 
 ### Middlewares
 
@@ -230,7 +278,6 @@ app.middlewares = proc do |faraday|
   faraday.request :multipart
   faraday.request :url_encoded
 
-  faraday.response :vk_logger
   faraday.response :api_errors
   faraday.response :json, content_type: /\bjson$/
   faraday.response :http_errors
