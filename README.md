@@ -205,7 +205,7 @@ end
 app.app_id #=> 3
 ````
 
-In this example, only one key is set to not look difficult. 
+In this example, the configuration is only one key, so it does not look difficult.
 
 Below are all the configuration keys for __VK-RUBY__.
 
@@ -267,7 +267,6 @@ This stack consists of standard `:multipart`,`:url_encoded`, `:json` middlewares
 
 Are also used: 
 
-- `:vk_logger` performs logging of `requests` and `responses `
 - `:http_errors` throws an exception if the __HTTP__ status header is different from the 200 
 - `:api_errors` throws an exception if the server response contains the __API__ error
 
@@ -303,7 +302,7 @@ app.middlewares = proc do |faraday|
   faraday.response :api_errors
   faraday.response :json, content_type: /\bjson$/
   faraday.response :http_errors
-  faraday.response :vk_logger, Logger.new('/path/to/file.log')
+  faraday.response :vk_logger, logger: Logger.new('/path/to/file.log')
 
   faraday.adapter :net_http_persistent
 end
@@ -312,6 +311,41 @@ end
 In this example, additional used [:retry](https://github.com/lostisland/faraday/blob/master/lib/faraday/request/retry.rb) middleware. It allows you to conveniently handle certain exceptions specified number of times with a certain interval – very convenient ;-) Also defined here is not the default __HTTP__ adapter [(Net::HTTP::Persistent)](https://github.com/drbrain/net-http-persistent).
 
 Read more [middleware usage](https://github.com/lostisland/faraday#advanced-middleware-usage).
+
+### IRB integration
+
+```.bash
+sh > gem install vk-ruby
+... gem installed ...
+
+sh > vk
+vk interactive ruby shell 1.0.0pre
+
+  Usage:
+    vk list [options]
+    vk add <name> [<token>]
+    vk update <name> [<token>]
+    vk remove <name>
+    vk <name> [options]
+
+  Options:
+    --eval=<code>    evaluate ruby code
+    --execute=<file> execute ruby file
+    --config=<file>  config file, default ./.vk.yml or ~/.vk.yml
+
+  Arguments:
+    <name>  user name
+    <token> vk api access token
+    <code>  ruby code
+    <file>  path to file 
+
+sh > vk add testuser
+... enter login
+... enter password
+
+vk-irb : testuser > users.get(user_ids: 1) #=> [{"id"=>1, "first_name"=>"Павел", "last_name"=>"Дуров"}]
+vk-irb : testuser > exit
+```
 
 ## Contributing to vk-ruby
 

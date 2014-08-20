@@ -28,9 +28,9 @@ class VK::FakeBrowser
 
       agent.get(url)
     else
-      raise VK::AuthorizationError.new({
+      raise VK::AuthentificationError.new({
         error: 'Authorization error',
-        error_description: 'invalid loging or password'
+        description: 'invalid loging or password'
       })
     end
   end

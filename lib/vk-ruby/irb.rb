@@ -10,6 +10,8 @@ class VK::IRB
 
   attr_reader :params, :config
 
+  DEFAULT_RC_FILE = "#{ ENV['HOME'] }/.vkrc.rb".freeze
+
   def_delegators :@highline, :ask, :say, :agree
 
   def initialize(docopt)
@@ -40,7 +42,10 @@ class VK::IRB
   private
 
   def context
-    @context ||= VK::IRB::Context.new(config)
+    @context ||= VK::IRB::Context.new(config).tap do |ctx|
+      ctx.access_token = config.users[params.user_name.to_sym] if user
+      rc_files.each { |file| ctx.instance_eval File.open(file).read }
+    end
   end
 
   def workspace
@@ -51,17 +56,26 @@ class VK::IRB
     @irb ||= ::IRB::Irb.new(workspace)
   end
 
+  def rc_files
+    @rc_files ||= [
+      DEFAULT_RC_FILE,
+      "#{ ENV['PWD'] }/.vkrc.rb"
+    ].compact.select {|f| File.exists?(f) }
+  end
+
   def list_user!
-    config.users.each { |user_name, _| puts user_name }
+    config.users.each { |user_name, _| say user_name.to_s }
   end
 
   def add_user!
     if config.user_exists? params.user_name
       if agree 'This user already exists, overwrite?'
-        config.add_user(params.user_name, token)
+        config.update_user(params.user_name, token)
+        say 'User successfully overwritted.'
       end
     else
       config.add_user(params.user_name, token)
+      say 'User successfully added.'
     end
 
     config.save!
@@ -69,14 +83,17 @@ class VK::IRB
 
   def remove_user!
     config.remove_user(params.user_name)
+    say 'User successfully removed.'
   end
 
   def update_user!
     if config.user_exists? params.user_name
       config.update_user(params.user_name, token)
+      say 'User successfully updated.'
     else
       if agree 'This user does not exists, add?'
         config.add_user(params.user_name, token)
+        say 'User successfully added.'
       end
     end
   end
@@ -86,19 +103,19 @@ class VK::IRB
   end
 
   def evaluate_code!
-    context.instance_eval(params.code)
+    say context.instance_eval(params.evaluated_code).to_s
   end
 
   def execute_file!
-    File.open(params.file) { |file| context.instance_eval(file.read) }
+    File.open(params.executed_file) { |file| context.instance_eval(file.read) }
   end
 
   def user
-    config.users[params.user_name]
+    config.users[params.user_name.to_sym] ? params.user_name : nil
   end
 
   def start_session!
-    puts "User '#{ params.user_name }' does not exists." unless user
+    say "User '#{ params.user_name }' does not exists." unless user
     setup
     ::IRB.conf[:MAIN_CONTEXT] = irb.context
     
@@ -112,8 +129,6 @@ class VK::IRB
 
   def setup
     ::IRB.setup(nil)
-    ::IRB.conf[:SAVE_HISTORY] = config.save_history
-    ::IRB.conf[:EVAL_HISTORY] = config.eval_history
     ::IRB.conf[:PROMPT_MODE] = :VK
     ::IRB.conf[:PROMPT][:VK] = {
       PROMPT_I: "#{ config.app_name } : #{ user ? user : 'unauthorized' } > ",
@@ -137,7 +152,7 @@ class VK::IRB
       question.overwrite = true
     end
 
-    context.client_auth(login: login, password: password)
+    context.client_auth(login: login, password: password)['access_token']
   end
 
 end

@@ -2,7 +2,7 @@
 
 class VK::IRB::Params < Struct.new(:docopt)
   DOCOPT = <<-DOCOPT
-VK interactive ruby shell
+vk interactive ruby shell #{ VK::VERSION }
 
 Usage:
   vk list [options]
@@ -12,15 +12,15 @@ Usage:
   vk <name> [options]
 
 Options:
-  --eval=<code>    Evaluate ruby code.
-  --execute=<file> Execute ruby file.
-  --config=<file>  Config file, default ./.vk.yml or ~/.vk.yml .
+  --eval=<code>    evaluate ruby code
+  --execute=<file> execute ruby file
+  --config=<file>  config file, default ./.vk.yml or ~/.vk.yml
 
 Arguments:
-  <name>  User name.
-  <token> User access token.
-  <code>  Ruby code.
-  <file>  File name.
+  <name>  user name
+  <token> vk api access token
+  <code>  ruby code
+  <file>  path to file 
 DOCOPT
 
   DEFAULT_CONFIG_FILE = "#{ ENV['HOME'] }/.vk.yml".freeze

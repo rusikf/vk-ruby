@@ -1,6 +1,6 @@
 # CLI configuration wrapper
 
-class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :eval_history, :users, :context_config)
+class VK::IRB::Config < Struct.new(:path, :app_name, :users, :context_config)
   extend Forwardable
 
   VK::Config.members.each do |member|
@@ -21,8 +21,6 @@ class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :eval_histor
 
     load_data.tap do |data|
       self.app_name = data[:app_name]
-      self.save_history = data[:save_history]
-      self.eval_history = data[:eval_history]
       self.users = data[:users] || {}
       self.context_config = VK::Config.new(data)
     end
@@ -37,19 +35,19 @@ class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :eval_histor
   end
 
   def add_user(user_name, token)
-    users[user_name] = token
+    users[user_name.to_sym] = token
     save!
   end
 
   alias_method :update_user, :add_user
 
   def remove_user(user_name)
-    users.delete(user_name)
+    users.delete(user_name.to_sym)
     save!
   end
 
   def user_exists?(user_name)
-    users.detect{ |name, _| user_name == name }
+    users.detect{ |name, _| user_name.to_sym == name }
   end
 
   private
@@ -70,8 +68,6 @@ class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :eval_histor
   def default_data
     VK.config.to_h.merge({
       app_name: 'vk-irb',
-      save_history: 100,
-      eval_history: 10,
       users: {}
     })
   end
@@ -79,8 +75,7 @@ class VK::IRB::Config < Struct.new(:path, :app_name, :save_history, :eval_histor
   def to_h
     self.context_config.to_h.merge({
       app_name: self.app_name,
-      save_history: self.save_history,
-      eval_history: self.eval_history
+      users: self.users
     }).tap { |h|
       h.delete(:access_token)
       h.delete(:parallel_manager)

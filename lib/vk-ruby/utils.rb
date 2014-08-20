@@ -14,6 +14,7 @@ module VK::Utils
     words.unshift(first_word).join
   end
 
+  # @private
   def self.deep_merge(a, b)
     b.each_pair do |k,bv|
       av = a[k]
@@ -28,6 +29,7 @@ module VK::Utils
     a
   end
 
+  # @private
   def self.stringify(object)
     case object
     when Hash
@@ -41,6 +43,7 @@ module VK::Utils
     end
   end
 
+  # @private
   def self.symbolize(object)
     case object
     when Hash

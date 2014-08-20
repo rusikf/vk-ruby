@@ -7,6 +7,10 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 require 'vk-ruby'
 require 'vk-ruby/irb'
 
+VK.configure do |default|
+  default.app_id = 4505011
+end
+
 begin
   docopt = Docopt::docopt(VK::IRB::Params::DOCOPT)
   VK::IRB.new(docopt).run!

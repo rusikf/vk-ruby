@@ -17,14 +17,14 @@ class VK::Application
   #
   # @param [Hash] params params for config (VK::Config)
   #
-  # @yieldparam application [VK::Application] new application instance
+  # @yieldparam config [VK::Config] application instance config
   #
   # @see VK::Config VK::Config
   # @note With VK::Application initializing config params merged with default config.
 
   def initialize(params = {})
     config.merge! params
-    yield(self) if block_given?
+    yield(self.config) if block_given?
   end
 
   create_default_namespaces!

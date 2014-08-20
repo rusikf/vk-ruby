@@ -7,8 +7,6 @@ describe VK::IRB::Config do
   let(:app_id)           { 'app_id' }
   let(:app_name)         { 'app_name' }
   let(:app_secret)       { 'app_secret' }
-  let(:eval_history)     { 'eval history file path' }
-  let(:history_file)     { 'save history file path' }
   let(:host)             { 'host' }
   let(:middlewares)      { 'faraday middlewares' }
   let(:open_timeout)     { 'open_timeout' }
@@ -22,7 +20,7 @@ describe VK::IRB::Config do
   let(:ssl_ca_path)      { 'ssl_ca_path' }
   let(:ssl_verify)       { 'ssl_verify' }
   let(:timeout)          { 'timeout' }
-  let(:users)            {{ 'admin' => 'token1' }}
+  let(:users)            {{ admin: 'token1' }}
   let(:verb)             { 'verb' }
   let(:version)          { 'version' }
 
@@ -30,14 +28,11 @@ describe VK::IRB::Config do
     app_id: app_id,
     app_name: app_name,
     app_secret: app_secret,
-    eval_history: eval_history,
-    history_file: history_file,
     host: host, 
     middlewares: middlewares,
     open_timeout: open_timeout,
     parallel_manager: parallel_manager,
     redirect_uri: redirect_uri,
-    save_history: save_history,
     settings: settings,
     timeout: timeout,
     users: users,
@@ -57,8 +52,6 @@ describe VK::IRB::Config do
   before { VK::IRB::Config.any_instance.stub(:load_data).and_return(data) }
 
   it { config.app_name.should eq(app_name) }
-  it { config.save_history.should eq(save_history) }
-  it { config.eval_history.should eq(eval_history) }
   it { config.users.should eq(users) }
   it { config.app_id.should eq(app_id) }
   it { config.app_secret.should eq(app_secret) }
@@ -84,24 +77,24 @@ describe VK::IRB::Config do
     before { config.stub(:save!) }
 
     describe 'add_user' do
-      it { expect{ config.add_user('new_admin', 'token2') }.to change{ config.users } }
-      it { expect{ config.add_user('new_admin', 'token2') }.to change{ config.users['new_admin'] } }
-      it { expect{ config.add_user('new_admin', 'token2') }.to change{ config.users.values } }
-      it { expect{ config.add_user('new_admin', 'token2') }.to change{ config.users.keys } }
+      it { expect{ config.add_user(:new_admin, 'token2') }.to change{ config.users } }
+      it { expect{ config.add_user(:new_admin, 'token2') }.to change{ config.users[:new_admin] } }
+      it { expect{ config.add_user(:new_admin, 'token2') }.to change{ config.users.values } }
+      it { expect{ config.add_user(:new_admin, 'token2') }.to change{ config.users.keys } }
     end
 
     describe 'update_user' do
-      it { expect{ config.update_user('admin', 'token3') }.to change{ config.users } }
-      it { expect{ config.update_user('admin', 'token3') }.to change{ config.users['admin'] } }
-      it { expect{ config.update_user('admin', 'token3') }.to change{ config.users.values } }
-      it { expect{ config.update_user('admin', 'token3') }.to_not change{ config.users.keys } }
+      it { expect{ config.update_user(:admin, 'token3') }.to change{ config.users } }
+      it { expect{ config.update_user(:admin, 'token3') }.to change{ config.users[:admin] } }
+      it { expect{ config.update_user(:admin, 'token3') }.to change{ config.users.values } }
+      it { expect{ config.update_user(:admin, 'token3') }.to_not change{ config.users.keys } }
     end
 
     describe 'remove_user' do
-      it { expect{ config.remove_user('admin') }.to change{ config.users } }
-      it { expect{ config.remove_user('admin') }.to change{ config.users['admin'] } }
-      it { expect{ config.remove_user('admin') }.to change{ config.users.values } }
-      it { expect{ config.remove_user('admin') }.to change{ config.users.keys } }
+      it { expect{ config.remove_user(:admin) }.to change{ config.users } }
+      it { expect{ config.remove_user(:admin) }.to change{ config.users[:admin] } }
+      it { expect{ config.remove_user(:admin) }.to change{ config.users.values } }
+      it { expect{ config.remove_user(:admin) }.to change{ config.users.keys } }
     end
 
     describe 'user_exists?' do

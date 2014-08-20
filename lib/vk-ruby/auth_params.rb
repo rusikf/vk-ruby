@@ -51,7 +51,7 @@ class VK::AuthParams < Struct.new(:config, :options)
 
   def check!(*names)
     names.each do |name|
-      fail(ArgumentError, "You should pass :#{ name } parameter") unless send(name)
+      fail(ArgumentError, "You should pass :#{ name } parameter") if send(name).nil?
     end
   end
   
