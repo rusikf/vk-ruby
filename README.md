@@ -7,7 +7,6 @@
 Ruby wrapper for vk.com API.
 [Documentation](http://rubydoc.info/gems/vk-ruby/frames).
 
-
 __VK-RUBY__ gives you full access to all API features:
 
 - [Has several types of methods naming and methods calling](#create-new-application)
@@ -18,7 +17,7 @@ __VK-RUBY__ gives you full access to all API features:
   - [Standalone](#standalone-client)
 - [File uploading](#uploading-files)
 - [Any faraday features](#middlewares)
-- IRB integration
+- [IRB integration](#irb-integration)
 
 To get started, you need to [register](http://vk.com/editapp?act=create) with [vk.com](vk.com) own application and get the keys and read [VK API documentation](http://vk.com/dev).
 
@@ -314,38 +313,7 @@ Read more [middleware usage](https://github.com/lostisland/faraday#advanced-midd
 
 ### IRB integration
 
-```.bash
-sh > gem install vk-ruby
-... gem installed ...
-
-sh > vk
-vk interactive ruby shell 1.0.0pre
-
-  Usage:
-    vk list [options]
-    vk add <name> [<token>]
-    vk update <name> [<token>]
-    vk remove <name>
-    vk <name> [options]
-
-  Options:
-    --eval=<code>    evaluate ruby code
-    --execute=<file> execute ruby file
-    --config=<file>  config file, default ./.vk.yml or ~/.vk.yml
-
-  Arguments:
-    <name>  user name
-    <token> vk api access token
-    <code>  ruby code
-    <file>  path to file 
-
-sh > vk add testuser
-... enter login
-... enter password
-
-vk-irb : testuser > users.get(user_ids: 1) #=> [{"id"=>1, "first_name"=>"Павел", "last_name"=>"Дуров"}]
-vk-irb : testuser > exit
-```
+![IRB integration](https://raw.githubusercontent.com/zinenko/vk-ruby/54b212ab7e75d09e0d7552e617745fb61fbe8f3b/irb.gif)
 
 ## Contributing to vk-ruby
 
