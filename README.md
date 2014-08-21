@@ -5,7 +5,7 @@
 [![Dependency Status](https://gemnasium.com/zinenko/vk-ruby.svg)](https://gemnasium.com/zinenko/vk-ruby)
 
 Ruby wrapper for vk.com API.
-[Documentation](http://rubydoc.info/github/zinenko/vk-ruby/master/frames).
+[Documentation](http://rubydoc.info/gems/vk-ruby/frames).
 
 
 __VK-RUBY__ gives you full access to all API features:
