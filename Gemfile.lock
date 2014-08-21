@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vk-ruby (1.0.0pre)
+    vk-ruby (1.0.0)
       docopt (~> 0.5, >= 0.5.0)
       faraday (~> 0.9, >= 0.9.0)
       faraday_middleware (~> 0.9, >= 0.9.1)
