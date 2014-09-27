@@ -313,7 +313,7 @@ Read more [middleware usage](https://github.com/lostisland/faraday#advanced-midd
 
 ### IRB integration
 
-![IRB integration](https://raw.githubusercontent.com/zinenko/vk-ruby/54b212ab7e75d09e0d7552e617745fb61fbe8f3b/irb.gif)
+![Interactive ruby shell integration](https://raw.githubusercontent.com/zinenko/vk-ruby/54b212ab7e75d09e0d7552e617745fb61fbe8f3b/irb.gif)
 
 ## Contributing to vk-ruby
 
