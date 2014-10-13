@@ -7,8 +7,6 @@ class VK::FakeBrowser
       form.email = login
       form.pass  = password
     }.submit
-  rescue VK::APIError
-    raise
   rescue Exception => ex
     raise VK::AuthentificationError.new({
       error: 'Authentification error',

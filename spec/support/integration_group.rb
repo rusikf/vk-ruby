@@ -1,5 +1,3 @@
-require 'mechanize'
-
 module IntegrationGroup
 
   def self.included(base)

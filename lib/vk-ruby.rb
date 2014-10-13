@@ -7,6 +7,7 @@ require 'multi_json'
 require 'openssl'
 require 'forwardable'
 require 'yaml'
+require 'mechanize'
 
 require 'vk-ruby/version'
 require 'vk-ruby/utils'
