@@ -7,6 +7,7 @@ require 'multi_json'
 require 'openssl'
 require 'forwardable'
 require 'yaml'
+require 'mechanize'
 
 require 'vk-ruby/version'
 require 'vk-ruby/utils'
@@ -36,7 +37,7 @@ module VK
     def config
       @config ||= VK::Config.new
     end
-    
+
     # Configure VK-RUBY
     #
     # @yieldparam config [VK::Config] global config
@@ -74,7 +75,7 @@ module VK
     # @see VK::Auth#client_auth
 
     def client_auth(options={})
-      Application.new(options).tap do |app| 
+      Application.new(options).tap do |app|
         app.client_auth({
           login: options[:login],
           password: options[:password]
