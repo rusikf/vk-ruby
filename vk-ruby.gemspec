@@ -64,7 +64,7 @@ THANKS
   gem.add_development_dependency 'json_pure', '~> 1.8',  '>= 1.8.1'
 
   gem.add_development_dependency 'net-http-persistent','~> 2.9', '>= 2.9.4'
-  gem.add_development_dependency 'yard',               '~> 0.8', '>= 0.8.7.4'
+  gem.add_development_dependency 'yard',               '~> 0.8', '>= 0.8.7.6'
   gem.add_development_dependency 'redcarpet',          '~> 3.0', '>= 3.1.2'
   gem.add_development_dependency 'github-markup',      '~> 1.2', '>= 1.2.1'
 
